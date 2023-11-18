@@ -1,0 +1,4 @@
+constraints: lua +allow-unsafe-gc -apicheck +export-dynamic +lua_64bits +pkg-config +system-lua,
+             lpeg  -rely-on-shared-lpeg-library,
+             pandoc  +embed_data_files,
+             pandoc-cli  +lua +nightly +server

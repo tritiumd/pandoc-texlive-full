@@ -1,0 +1,13 @@
+---
+documentclass: book
+papersize: a4
+fontsize: 14pt
+title: "Pandoc & MD"
+subtitle: "Cho người lười gõ Word & Latex..."
+author: Phan Thanh Ngọc
+pandoc-latex-environment:
+  beginning: [beginning]
+  noteblock: [note]
+toc: true
+number-sections: true
+---
