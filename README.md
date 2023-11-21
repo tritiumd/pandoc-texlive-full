@@ -32,3 +32,30 @@ Mount your template folder with /.pandoc/template
 
 ## Font
 Mount your font folder with /usr/share/fonts/
+
+# Notes
+If lua filter doesn't working expectly, e.g Cannot included header, you should copy it from lua file
+
+With `tables-rules.lua` from chrisaga/hk-pandoc-filters
+
+```latex
+\usepackage{longtable,booktabs,array,multirow}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\setlength{\aboverulesep}{0pt}
+\setlength{\belowrulesep}{0pt}
+\renewcommand{\arraystretch}{1.3}
+```
+
+# Credits
+- [Pandoc](https://github.com/jgm/pandoc)
+- [Pandoc Team](https://github.com/pandoc)
+- [Pandoc-Ext Team](https://github.com/pandoc-ext)
+- chrisaga for some [filter](https://github.com/chrisaga/hk-pandoc-filters)

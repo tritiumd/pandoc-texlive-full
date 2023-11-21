@@ -53,34 +53,11 @@ COPY --from=builder /usr/local/bin/pandoc-crossref /usr/local/bin/pandoc-crossre
 COPY --from=builder /usr/src/pandoc/data /usr/share/pandoc/data
 
 # Create dir for pandoc filter and template
-ARG PANDOC_DIR=/.pandoc
-RUN mkdir ${PANDOC_DIR}
-RUN ln -s ${PANDOC_DIR} /root/.pandoc
+COPY ./pandoc /.pandoc
+RUN ln -s /.pandoc /root/.pandoc
 
 # Install python extension
 RUN pip3 install --break-system-packages --no-cache-dir pandoc-latex-environment
-RUN pip3 install --break-system-packages --no-cache-dir git+https://github.com/veneres/py-pandoc-include-code.git
-
-# Install pandoc template
-RUN mkdir ${PANDOC_DIR}/templates
-WORKDIR ${PANDOC_DIR}/templates
-## eisvogel
-ARG EISVOGEL_REPO=https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template
-ARG EISVOGEL_VERSION="v2.4.1"
-RUN wget ${EISVOGEL_REPO}/${EISVOGEL_VERSION}/eisvogel.tex
-
-# Install pandoc lua filter
-RUN mkdir ${PANDOC_DIR}/filters
-WORKDIR ${PANDOC_DIR}/filters
-ARG REPO=https://raw.githubusercontent.com/pandoc-ext
-## diagram
-ARG EXT_NAME=diagram
-ARG EXT_VERSION=v1
-RUN wget ${REPO}/${EXT_NAME}/${EXT_VERSION}/_extensions/${EXT_NAME}/${EXT_NAME}.lua
-## multibib
-ARG EXT_NAME=multibib
-ARG EXT_VERSION="v1.0.0"
-RUN wget ${REPO}/${EXT_NAME}/${EXT_VERSION}/_extensions/${EXT_NAME}/${EXT_NAME}.lua
 
 RUN mkdir /workspace
 WORKDIR /workspace

@@ -1,3 +1,20 @@
+---
+documentclass: book
+papersize: a4
+fontsize: 14pt
+title: "Pandoc & MD"
+subtitle: "Cho người lười gõ Word & Latex..."
+author: Phan Thanh Ngọc
+pandoc-latex-environment:
+  beginning: [beginning]
+  noteblock: [note]
+tables-vrules: true
+tables-hrules: true
+toc: true
+number-sections: true
+
+---
+
 ::: beginning
 Sao tự nhiên mình rảnh mà làm cái này vậy nhỉ?? Chờ build lâu quá ngồi viết nhảm. Thấy sơ xài thì đây là viết test. Tính ra là mất cũng gần 14 15 tiếng gì đó vì cái tương lai cài pandoc bằng 1 lệnh duy nhất (Nói thế thui chứ chờ mạng là chính)
 :::
@@ -62,15 +79,32 @@ a = 3 # làm màu thui không có chi đâu
 \end{tikzpicture}
 ```
 
+## Thêm code từ file
+```{.bash include=example.sh }
+
+```
+
+## Cái bảng full grid
+
+: Sample grid table.
+
++---------------------+-----------------------+
+| Location            | Temperature 1961-1990 |
+|                     | in degree Celsius     |
+|                     +-------+-------+-------+
+|                     | min   | mean  | max   |
++=====================+=======+=======+=======+
+| Antarctica          | -89.2 | N/A   | 19.8  |
++---------------------+-------+-------+-------+
+| Earth               | -89.2 | 14    | 56.7  |
++---------------------+-------+-------+-------+
+
 ## Ngắt trang nèe
 
 `\newpage`{=latex}
 
 
-## Thêm code từ file
-```{.bash include=example.sh }
 
-```
 
 Example thế thui hết òiii còn lại tự tìm nhaa
 
@@ -80,9 +114,12 @@ Cảm ơn những người đã code ra:
 - pandoc 
 - pandoc-crossref
 - pandoc-latex-environment 
-- diagram 
+- column-div
+- diagram
+- include-code-files
+- include-files
 - multibib
-- py-pandoc-include-code 
+- tables-rules
 - texlive cùng các package 
 - ... (Ai đó mì quên nhắc tên)
 
