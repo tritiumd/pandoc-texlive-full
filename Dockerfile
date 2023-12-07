@@ -1,21 +1,13 @@
-ARG UBUNTU_VERSION=lunar
-FROM --platform=$BUILDPLATFORM ubuntu:$UBUNTU_VERSION as builder
+# Rewrite from build pandoc from source in alpine (https://github.com/pandoc/dockerfiles/blob/master/alpine/Dockerfile)
+FROM --platform=$BUILDPLATFORM alpine:edge as builder
 
-# Rewrite from build pandoc from source in ubuntu (https://github.com/pandoc/dockerfiles/blob/master/ubuntu/Dockerfile)
+RUN apk --no-cache add alpine-sdk bash ca-certificates cabal fakeroot \
+        ghc git gmp-dev libffi libffi-dev lua5.4-dev pkgconfig yaml zlib-dev
 
-## Install build dependencies
-RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends \
-    ghc cabal-install build-essential ca-certificates curl fakeroot git libgmp-dev \
-    liblua5.4-dev pkg-config zlib1g-dev
+COPY cabal.root.config /root/.cabal/config
 
-## Clean APT cache and Man pages
-RUN apt-get clean && apt-get autoclean && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* /usr/share/groff/*  \
-    /usr/share/info/* /usr/share/lintian/* /usr/share/linda/* /var/cache/man/* /usr/share/man/* /usr/share/doc/*
-
-## Clone
-ARG PANDOC_REPO=https://github.com/jgm/pandoc.git
-ARG PANDOC_VERSION="3.1.9"
-RUN git clone --branch ${PANDOC_VERSION} --depth=1 --quiet ${PANDOC_REPO} /usr/src/pandoc
+# clone pandoc
+RUN git clone --branch=3.1.11  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
 WORKDIR /usr/src/pandoc
 RUN cabal v2-update -v3
 
@@ -30,34 +22,49 @@ RUN cabal v2-build --disable-tests --disable-bench \
 RUN find dist-newstyle -name 'pandoc*' -type f -perm -u+x \
          -exec strip '{}' ';' -exec cp '{}' /usr/local/bin/ ';'
 
-FROM --platform=$BUILDPLATFORM ubuntu:$UBUNTU_VERSION as pandoc-texlive-full
-LABEL maintainer='Phan Thanh Ngoc <phanthanhngocblaplafla@gmail.com>'
+FROM --platform=$BUILDPLATFORM alpine:edge
 
-# Install textlive and dependencies
-RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y  \
-    openjdk-17-jre-headless texlive-full python3-pip git librsvg2-bin\
-    liblua5.4-0 ca-certificates wget lua-lpeg libatomic1 perl tar xzdec \
-    libgmp10 libpcre3 libyaml-0-2 zlib1g fontconfig gnupg gzip
+# https://github.com/gliderlabs/docker-alpine/issues/386#issuecomment-380096034
+RUN echo -e "https://nl.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories
 
-## Install Microsoft font (thanks to https://stackoverflow.com/a/77216646)
-RUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections \
-    && DEBIAN_FRONTEND=noninteractive apt-get -y install ttf-mscorefonts-installer
+RUN apk --no-cache add gmp libffi lua5.4 lua5.4-lpeg librsvg fontconfig freetype gnupg gzip \
+    perl tar wget xz py-pip texlive-full asymptote plantuml graphviz msttcorefonts-installer \
+    nodejs npm chromium font-noto-cjk font-noto-emoji  terminus-font ttf-dejavu ttf-freefont  \
+    ttf-font-awesome ttf-inconsolata ttf-linux-libertine
 
-## Clean APT cache and Man pages
-RUN apt-get clean && apt-get autoclean && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* /usr/share/groff/*  \
-    /usr/share/info/* /usr/share/lintian/* /usr/share/linda/* /var/cache/man/* /usr/share/man/* /usr/share/doc/*
+RUN update-ms-fonts && fc-cache -f
 
-# Install pandoc
+# TeXLive binaries location
+ARG texlive_bin="/opt/texlive/texdir/bin"
+
+# The architecture suffix may vary based on different distributions,
+# particularly for musl libc based distrubions, like Alpine linux,
+# where the suffix is linuxmusl
+RUN TEXLIVE_ARCH="$(uname -m)-linuxmusl" && \
+    mkdir -p ${texlive_bin} && \
+    ln -sf "${texlive_bin}/${TEXLIVE_ARCH}" "${texlive_bin}/default"
+
+# Modify PATH environment variable, prepending TexLive bin directory
+ENV PATH="${texlive_bin}/default:${PATH}"
+
+RUN rm -rf /var/lib/cache/* /var/lib/log/* /usr/share/groff/* /usr/share/info/* /usr/share/lintian/* /usr/share/linda/*  \
+    /var/cache/man/* /usr/share/man/* /usr/share/doc/*
+
+# Install python extension
+RUN pip3 install --break-system-packages --no-cache-dir pandoc-latex-environment
+
+# Install nodejs extension
+RUN npm install -g @mermaid-js/mermaid-cli
+RUN PATH="$(npm root -g)/.bin:${PATH}"
+
 COPY --from=builder /usr/local/bin/pandoc /usr/local/bin/pandoc
 COPY --from=builder /usr/local/bin/pandoc-crossref /usr/local/bin/pandoc-crossref
 COPY --from=builder /usr/src/pandoc/data /usr/share/pandoc/data
 
 # Create dir for pandoc filter and template
-COPY ./pandoc /.pandoc
-RUN ln -s /.pandoc /root/.pandoc
-
-# Install python extension
-RUN pip3 install --break-system-packages --no-cache-dir pandoc-latex-environment
+COPY ./pandoc /root/.pandoc
+# https://github.com/mermaid-js/mermaid-cli/blob/master/Dockerfile
+COPY puppeteer-config.json /root/puppeteer-config.json
 
 RUN mkdir /workspace
 WORKDIR /workspace

@@ -1,10 +1,11 @@
 # Install pandoc template
 cd ./pandoc/templates/
+redownload=false
 
-if [ ! -f eisvogel.tex ]
+if [ ! -f eisvogel.tex ] || [ "redownload" = true ]
 then
     EISVOGEL_REPO="https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template"
-    EISVOGEL_VERSION="v2.4.1"
+    EISVOGEL_VERSION="2.4.2"
     wget ${EISVOGEL_REPO}/${EISVOGEL_VERSION}/eisvogel.tex
 fi
 
@@ -13,14 +14,14 @@ cd ../filters
 
 REPO="https://raw.githubusercontent.com/pandoc-ext"
 
-if [ ! -f diagram.lua ]
+if [ ! -f diagram.lua ] || [ "redownload" = true ]
 then
     EXT_NAME=diagram
     EXT_VERSION=v1
     wget ${REPO}/${EXT_NAME}/${EXT_VERSION}/_extensions/${EXT_NAME}/${EXT_NAME}.lua
 fi
 
-if [ ! -f multibib.lua ]
+if [ ! -f multibib.lua ] || [ "redownload" = true ]
 then
     EXT_NAME=multibib
     EXT_VERSION="v1.0.0"
@@ -28,8 +29,6 @@ then
 fi
 
 REPO="https://raw.githubusercontent.com/pandoc/lua-filters/master/"
-
-redownload=false
 
 if [ ! -f include-code-files.lua ] || [ "redownload" = true ]
 then
