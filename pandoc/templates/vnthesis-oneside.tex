@@ -1,0 +1,481 @@
+\PassOptionsToPackage{unicode$for(hyperrefoptions)$,$hyperrefoptions$$endfor$}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names,table}{xcolor}
+$if(CJKmainfont)$
+\PassOptionsToPackage{space}{xeCJK}
+$endif$
+\documentclass[$if(fontsize)$$fontsize$$endif$,oneside]{$if(documentclass)$$documentclass$$else$scrbook$endif$}
+
+\usepackage{geometry}
+\geometry{a4paper,
+    top=$if(top-margin)$$top-margin$$else$2.5cm$endif$,
+    bottom=$if(bottom-margin)$$bottom-margin$$else$2.5cm$endif$,
+    left=$if(left-margin)$$left-margin$$else$3cm$endif$,
+    right=$if(right-margin)$$right-margin$$else$ 2.5cm $endif$,
+}
+
+\usepackage{xcolor}
+\usepackage[utf8]{vietnam}
+\usepackage[utf8]{inputenc}
+\usepackage[vietnamese]{babel}
+\usepackage[vietnamese=nohyphenation]{hyphsubst}
+
+\usepackage{iftex}
+
+\usepackage{fontspec}
+\usepackage{pifont}
+\setmainfont{$if(font)$$font$$else$Times New Roman$endif$}
+\defaultfontfeatures{Extension = .otf}
+\usepackage{fontawesome5}
+\usepackage{awesomebox}
+\usepackage{unicode-math}
+\usepackage{amsmath}
+\usepackage{utfsym}
+
+\usepackage{listings}
+\lstset{literate=% Thêm kí tự cho listings https://github.com/thiminhnhut/latex/tree/master/tips/listings/tiengviet-trong-listings
+% Vần a
+    {á}{{\'a}}1
+    {à}{{\`a}}1
+    {ạ}{{\d a}}1
+    {ả}{{\h a}}1
+    {ã}{{\~ a}}1
+%
+    {Á}{{\'A}}1
+    {À}{{\`A}}1
+    {Ạ}{{\d A}}1
+    {Ả}{{\h A}}1
+    {Ã}{{\~ A}}1
+%
+% Vần ă
+    {ă}{{\u a}}1
+    {ắ}{{\'\abreve }}1
+    {ằ}{{\`\abreve }}1
+    {ặ}{{\d \abreve }}1
+    {ẳ}{{\h \abreve }}1
+    {ẵ}{{\~\abreve }}1
+%
+    {Ă}{{\u A}}1
+    {Ắ}{{\'\ABREVE }}1
+    {Ằ}{{\`\ABREVE }}1
+    {Ặ}{{\d \ABREVE }}1
+    {Ẳ}{{\h \ABREVE }}1
+    {Ẵ}{{\~\ABREVE }}1
+%
+% Vần â
+    {â}{{\^ a}}1
+    {ấ}{{\'\acircumflex }}1
+    {ầ}{{\`\acircumflex }}1
+    {ậ}{{\d \acircumflex }}1
+    {ẩ}{{\h \acircumflex }}1
+    {ẫ}{{\~\acircumflex }}1
+%
+    {Â}{{\^ A}}1
+    {Ấ}{{\'\ACIRCUMFLEX }}1
+    {Ầ}{{\`\ACIRCUMFLEX }}1
+    {Ậ}{{\d \ACIRCUMFLEX }}1
+    {Ẩ}{{\h \ACIRCUMFLEX }}1
+    {Ẫ}{{\~\ACIRCUMFLEX }}1
+%
+% Vần đ
+    {đ}{{\dj }}1
+    {Đ}{{\DJ }}1
+%
+% Vần e
+    {é}{{\'e}}1
+    {è}{{\`e}}1
+    {ẹ}{{\d e}}1
+    {ẻ}{{\h e}}1
+    {ẽ}{{\~ e}}1
+%
+    {É}{{\'E}}1
+    {È}{{\`E}}1
+    {Ẹ}{{\d E}}1
+    {Ẻ}{{\h E}}1
+    {Ẽ}{{\~ E}}1
+%
+% Vần ê
+    {ê}{{\^e}}1
+    {ế}{{\'\ecircumflex }}1
+    {ề}{{\`\ecircumflex }}1
+    {ệ}{{\d \ecircumflex }}1
+    {ể}{{\h \ecircumflex}}1
+    {ễ}{{\~\ecircumflex }}1
+%
+    {Ê}{{\^E}}1
+    {Ế}{{\'\ECIRCUMFLEX }}1
+    {Ề}{{\`\ECIRCUMFLEX }}1
+    {Ệ}{{\d \ECIRCUMFLEX }}1
+    {Ể}{{\h \ECIRCUMFLEX }}1
+    {Ễ}{{\~\ECIRCUMFLEX }}1
+%
+% Vần i
+    {í}{{\'i}}1
+    {ì}{{\`i}}1
+    {ị}{{\d i}}1
+    {ỉ}{{\h i}}1
+    {ĩ}{{\~ i}}1
+%
+    {Í}{{\'I}}1
+    {Ì}{{\`I}}1
+    {Ị}{{\d I}}1
+    {Ỉ}{{\h I}}1
+    {Ĩ}{{\~I}}1
+%
+% Vần o
+    {ó}{{\'o}}1
+    {ò}{{\`o}}1
+    {ọ}{{\d o}}1
+    {ỏ}{{\h o}}1
+    {õ}{{\~o}}1
+%
+    {Ó}{{\'O}}1
+    {Ò}{{\`O}}1
+    {Ọ}{{\d O}}1
+    {Ỏ}{{\h O}}1
+    {Õ}{{\~O}}1
+%
+% Vần ô
+    {ô}{{\^o}}1
+    {ố}{{\'\ocircumflex }}1
+    {ồ}{{\`\ocircumflex }}1
+    {ộ}{{\d \ocircumflex }}1
+    {ổ}{{\h \ocircumflex }}1
+    {ỗ}{{\~\ocircumflex }}1
+%
+    {Ô}{{\^O}}1
+    {Ố}{{\'\OCIRCUMFLEX }}1
+    {Ồ}{{\`\OCIRCUMFLEX }}1
+    {Ộ}{{\d \OCIRCUMFLEX }}1
+    {Ổ}{{\h \OCIRCUMFLEX }}1
+    {Ỗ}{{\~\OCIRCUMFLEX }}1
+%
+% Vần ơ
+    {ơ}{{\ohorn }}1
+    {ớ}{{\'\ohorn }}1
+    {ờ}{{\`\ohorn }}1
+    {ợ}{{\d \ohorn }}1
+    {ở}{{\h \ohorn }}1
+    {ỡ}{{\~\ohorn }}1
+%
+    {Ơ}{{\OHORN }}1
+    {Ớ}{{\'\OHORN }}1
+    {Ờ}{{\`\OHORN }}1
+    {Ợ}{{\d \OHORN }}1
+    {Ở}{{\h \OHORN }}1
+    {Ỡ}{{\~\OHORN }}1
+%
+% Vần u
+    {ú}{{\'u}}1
+    {ù}{{\`u}}1
+    {ụ}{{\d u}}1
+    {ủ}{{\h u }}1
+    {ũ}{{\~u}}1
+%
+    {Ú}{{\'U}}1
+    {Ù}{{\`U}}1
+    {Ụ}{{\d U}}1
+    {Ủ}{{\h U}}1
+    {Ũ}{{\~U}}1
+%
+% Vần ư
+    {ư}{{\uhorn }}1
+    {ứ}{{\'\uhorn }}1
+    {ừ}{{\`\uhorn }}1
+    {ự}{{\d \uhorn }}1
+    {ử}{{\h \uhorn }}1
+    {ữ}{{\~\uhorn }}1
+%
+    {Ư}{{\UHORN }}1
+    {Ứ}{{\'\UHORN }}1
+    {Ừ}{{\`\UHORN }}1
+    {Ự}{{\d \UHORN }}1
+    {Ử}{{\h \UHORN }}1
+    {Ữ}{{\~\UHORN }}1
+%
+% Vần y
+    {ý}{{\'y}}1
+    {ỳ}{{\`y}}1
+    {ỵ}{{\d y}}1
+    {ỷ}{{\h y}}1
+    {ỹ}{{\~y}}1
+%
+    {Ý}{{\'Y}}1
+    {Ỳ}{{\`Y}}1
+    {Ỵ}{{\d Y}}1
+    {Ỷ}{{\h Y}}1
+    {Ỹ}{{\~Y}}1
+}
+\lstset{
+    backgroundcolor=\color[RGB]{223, 223, 225},
+    aboveskip=3mm,
+    belowskip=3mm,
+    showstringspaces=false,
+    columns=flexible,
+    basicstyle={\small\ttfamily},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{cyan},
+    stringstyle=\color{magenta},
+    keepspaces=true,
+    breaklines=true,
+    breakatwhitespace=false,
+    breakautoindent=true,
+    postbreak=\mbox{\textcolor{blue}{$$\hookrightarrow$$}\space},
+    frame=shadowbox,
+    rulesepcolor=\color{cyan!20!gray},
+    rulecolor=\color{magenta},
+    tabsize=2,
+}
+
+\usepackage[]{hyperref}
+\usepackage{bookmark}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,
+    urlcolor=blue,
+    pdftitle={$title$},
+}
+
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+$pagestyle$
+\fancypagestyle{plain}{%
+\fancyhf{}
+$pagestyle$
+}
+
+\usepackage{titlesec}
+$if(toc)$
+\setcounter{tocdepth}{$if(toc.tocdepth)$$toc.tocdepth$$else$2$endif$}
+$endif$
+\renewcommand{\baselinestretch}{$if(line-spacing)$$line-spacing$$else$1$endif$}
+\usepackage{indentfirst}
+\setlength{\parindent}{$if(indent)$$indent$$else$14pt$endif$}
+\setlength{\parskip}{$parskip$$if(parskip)$$else$6pt$endif$}
+
+$if(number-sections)$
+\setcounter{secnumdepth}{4}
+\renewcommand{\thechapter}{$if(number-sections.chapter)$$number-sections.chapter$$else$\arabic{chapter}$endif$}
+\renewcommand{\thesection}{$if(number-sections.section)$$number-sections.section$$else$\thechapter.\arabic{section}$endif$}
+\renewcommand{\thesubsection}{$if(number-sections.subsection)$$number-sections.subsection$$else$\thesection.\arabic{subsection}$endif$}
+\renewcommand{\thesubsubsection}{$if(number-sections.subsubsection)$$number-sections.subsubsection$$else$\thesubsection.\arabic{subsubsection}$endif$}
+$else$
+\setcounter{secnumdepth}{-\maxdimen}
+$endif$
+\titleformat{\section}
+{\bfseries\fontsize{14}{20}\selectfont\rmfamily}{\thesection}{1em}{}
+\titleformat{\subsection}
+{\bfseries\fontsize{14}{18}\selectfont\rmfamily}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+{\bfseries\fontsize{14}{16}\selectfont\rmfamily}{\thesubsubsection}{1em}{}
+%begin tables-vrules.lua
+\usepackage{longtable,booktabs,array, multirow}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\setlength{\aboverulesep}{0pt}
+\setlength{\belowrulesep}{0pt}
+\renewcommand{\arraystretch}{1.3}
+%end tables-vrules.lua
+
+\usepackage{footnotebackref}
+
+$for(header-includes)$$header-includes$$endfor$
+
+$if(frame_type)$
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\newcommand{\frontmatterthesisframe}[0]{
+\begin{tikzpicture}[remember picture,overlay]
+\centering
+\ifnum$frame_type$=0
+$frame$
+\fi
+
+\ifnum$frame_type$=1
+\draw[blue!70!black,line width=4pt]
+([xshift=-1.5cm,yshift=-2cm]current page.north east) coordinate (A)--
+([xshift=3.5cm,yshift=-2cm]current page.north west) coordinate(B)--
+([xshift=3.5cm,yshift=2cm]current page.south west) coordinate (C)--
+([xshift=-1.5cm,yshift=2cm]current page.south east) coordinate(D)--cycle;
+\draw
+([xshift=-0.5cm,yshift=0.5cm]A)--
+([xshift=0.5cm,yshift=0.5cm]B)--
+([xshift=0.5cm,yshift=-0.5cm]B)--
+([xshift=-0.5cm,yshift=-0.5cm]B)--
+([xshift=-0.5cm,yshift=0.5cm]C)--
+([xshift=0.5cm,yshift=0.5cm]C)--
+([xshift=0.5cm,yshift=-0.5cm]C)--
+([xshift=-0.5cm,yshift=-0.5cm]D)--
+([xshift=-0.5cm,yshift=0.5cm]D)--
+([xshift=0.5cm,yshift=0.5cm]D)--
+([xshift=0.5cm,yshift=-0.5cm]A)--
+([xshift=-0.5cm,yshift=-0.5cm]A)--
+([xshift=-0.5cm,yshift=0.5cm]A);
+\draw
+([xshift=0.3cm,yshift=-0.3cm]A)--
+([xshift=-0.3cm,yshift=-0.3cm]B)--
+([xshift=-0.3cm,yshift=0.3cm]B)--
+([xshift=0.3cm,yshift=0.3cm]B)--
+([xshift=0.3cm,yshift=-0.3cm]C)--
+([xshift=-0.3cm,yshift=-0.3cm]C)--
+([xshift=-0.3cm,yshift=0.3cm]C)--
+([xshift=0.3cm,yshift=0.3cm]D)--
+([xshift=0.3cm,yshift=-0.3cm]D)--
+([xshift=-0.3cm,yshift=-0.3cm]D)--
+([xshift=-0.3cm,yshift=0.3cm]A)--
+([xshift=0.3cm,yshift=0.3cm]A)--
+([xshift=0.3cm,yshift=-0.3cm]A);
+\fi
+
+\ifnum$frame_type$=2
+\draw [line width=2pt]
+([xshift=3.5cm,yshift=-2.5cm]current page.north west)
+rectangle
+([xshift=-2cm,yshift=2.5cm]current page.south east);
+\draw [line width=0.5pt]
+([xshift=3.6cm,yshift=-2.6cm]current page.north west)
+rectangle
+([xshift=-2.1cm,yshift=2.6cm]current page.south east);
+\fi
+
+\ifnum$frame_type$=3
+\draw[line width = 3pt]
+([xshift=3.5cm,yshift=-2.5cm]current page.north west)
+rectangle
+([xshift=-2cm,yshift=2.5cm]current page.south east);
+\fi
+\end{tikzpicture}
+}
+$endif$
+
+\newcommand{\frontmatterthesisinfoout}[0]{
+\noindent\makebox[\linewidth][c]{%
+\begin{minipage}[t][0.95\textheight][t]{\linewidth}%
+\centering
+\vspace*{3mm}
+\fontsize{14}{16}\selectfont $university$ \\
+$if(collage)$\fontsize{14}{16}\selectfont $collage$ \\$endif$
+\fontsize{13}{16}\selectfont\textbf{$faculty$} \\
+$if(horizontal_line)$$horizontal_line$\\$endif$
+\vspace*{1.5cm}
+$if(logo)$\includegraphics[width=0.5\linewidth]{$logo$}\\$endif$
+
+\ifnum$content_type$=0
+$titlepage_content$
+\fi
+\ifnum$content_type$=1
+\vspace*{1.5cm}
+\fontsize{18}{1}\selectfont \textbf{$title$} \\
+\vspace{2cm}
+$if(subtitle)${\fontsize{14}{16}\selectfont $subtitle$}  \\$endif$
+$if(subject)${\fontsize{14}{16}\selectfont $subject$}  \\$endif$
+$if(major)${\fontsize{14}{16}\selectfont Ngành: $major$}  \\$endif$
+\vspace{2cm}
+$if(instructor)$\fontsize{14}{1}\selectfont\textbf{Người hướng dẫn: $instructor$} \\$endif$
+\vspace{2cm}
+\raggedright{\hspace{4.2cm}\fontsize{14}{1}\selectfont \textbf{Người thực hiện:}\\}
+\vspace{0.5cm}\hspace{5.5cm}
+\begin{tabular}{ll}
+$for(author)$$author.name$ & $author.id$ \\ \\[0.25em] $endfor$
+\end{tabular}
+\fi
+
+\vfill
+\centering
+\fontsize{14}{14}\selectfont{\textbf{$position$$if(year)$ - $year$$endif$}}
+\end{minipage}%
+}
+}
+
+\newcommand{\frontmatterthesisinfoin}[0]{
+\noindent\makebox[\linewidth][c]{%
+\begin{minipage}[t][0.95\textheight][t]{\linewidth}%
+\centering
+\vspace*{3mm}
+\fontsize{14}{16}\selectfont $university$ \\
+$if(collage)$\fontsize{14}{16}\selectfont $collage$ \\$endif$
+\fontsize{13}{16}\selectfont\textbf{$faculty$} \\
+$if(horizontal_line)$$horizontal_line$\\$endif$
+\vspace*{1.5cm}
+$if(logo)$\includegraphics[width=0.5\linewidth]{$second_logo$}\\$endif$
+
+\ifnum$second_content_type$=0
+$second_titlepage_content$
+\fi
+\ifnum$second_content_type$=1
+\vspace*{1.5cm}
+\fontsize{18}{1}\selectfont \textbf{$title$} \\
+\vspace{2cm}
+$if(subtitle)${\fontsize{14}{16}\selectfont $subtitle$}  \\$endif$
+$if(subject)${\fontsize{14}{16}\selectfont $subject$}  \\$endif$
+$if(major)${\fontsize{14}{16}\selectfont Ngành: $major$}  \\$endif$
+\vspace{2cm}
+$if(instructor)$\fontsize{14}{1}\selectfont\textbf{Người hướng dẫn: $instructor$} \\$endif$
+\vspace{2cm}
+\raggedright{\hspace{4.2cm}\fontsize{14}{1}\selectfont \textbf{Người thực hiện:}\\}
+\vspace{0.5cm}\hspace{5.5cm}
+\begin{tabular}{ll}
+$for(author)$$author.name$ & $author.id$ \\ \\[0.25em] $endfor$
+\end{tabular}
+\fi
+
+\vfill
+\centering
+\fontsize{14}{14}\selectfont{\textbf{$position$$if(year)$ - $year$$endif$}}
+\end{minipage}%
+}
+}
+$if(toc)$
+\newcommand{\toc}[0]{
+\newpage\tableofcontents
+$if(toc.lof)$\newpage\listoffigures$endif$
+$if(toc.lot)$\newpage\listoftables$endif$
+}
+$endif$
+
+\begin{document}
+\frontmatter
+$if(titlepage_cover)$
+\begin{titlepage}
+\frontmatterthesisframe
+\frontmatterthesisinfoout
+\end{titlepage}
+$endif$
+$if(second_titlepage_cover)$
+\begin{titlepage}
+\frontmatterthesisframe
+\frontmatterthesisinfoin
+\end{titlepage}
+$endif$
+\mainmatter
+\pagestyle{fancy}
+$body$
+\backmatter
+\end{document}
