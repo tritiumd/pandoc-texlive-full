@@ -1,0 +1,303 @@
+\PassOptionsToPackage{unicode$for(hyperrefoptions)$,$hyperrefoptions$$endfor$}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names,table}{xcolor}
+$if(CJKmainfont)$
+\PassOptionsToPackage{space}{xeCJK}
+$endif$
+\documentclass[$if(fontsize)$$fontsize$$endif$,$if(twoside)$twoside$else$oneside$endif$]{$documentclass$}
+
+\usepackage{geometry}
+\geometry{a4paper,
+    top=$if(top-margin)$$top-margin$$else$2.5cm$endif$,
+    bottom=$if(bottom-margin)$$bottom-margin$$else$2.5cm$endif$,
+    left=$if(left-margin)$$left-margin$$else$3cm$endif$,
+    right=$if(right-margin)$$right-margin$$else$2.5cm$endif$,
+}
+
+\usepackage{iftex}
+
+\usepackage[utf8]{vietnam}
+\usepackage[utf8]{inputenc}
+\usepackage[vietnamese]{babel}
+\usepackage[vietnamese=nohyphenation]{hyphsubst}
+
+\usepackage{fontspec}
+\usepackage{pifont}
+\setmainfont{$if(font)$$font$$else$Times New Roman$endif$}
+\defaultfontfeatures{Extension = .otf}
+\usepackage{fontawesome5}
+\usepackage{unicode-math}
+\usepackage{amsmath}
+\usepackage{utfsym}
+\usepackage{pmboxdraw}
+\usepackage{noto-mono}
+
+\usepackage{xcolor}
+\definecolor{deepblue}{RGB}{0, 0, 112}
+\definecolor{deepgreen}{RGB}{0, 112, 0}
+\definecolor{deepred}{RGB}{153, 0, 0}
+\definecolor{cyclamen}{RGB}{255, 145, 237}
+\definecolor{bubblegum}{RGB}{255, 115, 232}
+
+\usepackage{listings}
+\lstset{
+    aboveskip=5mm,
+    belowskip=5mm,
+    showstringspaces=false,
+    columns=flexible,
+    basicstyle={\small\notomono},
+    numbers=left,
+    numberfirstline,
+    firstnumber=1,
+    stepnumber=5,
+    numberstyle=\small\color{gray},
+    keywordstyle=\bfseries\color{deepblue},
+    commentstyle=\itshape\color{deepgreen},
+    stringstyle=\color{bubblegum},
+    emphstyle=\color{deepred},
+    keepspaces=true,
+    breaklines=true,
+    breakatwhitespace=false,
+    breakautoindent=true,
+    postbreak=\mbox{\textcolor{deepblue}{$$\hookrightarrow$$}\space},
+    frame=shadowbox,
+    rulesepcolor=\color{bubblegum},
+    rulecolor=\color{cyclamen},
+    tabsize=2,
+    texcl=true,
+}
+
+\usepackage[]{hyperref}
+\usepackage{bookmark}
+\usepackage{color}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=bubblegum,
+    urlcolor=deepblue,
+    pdftitle={$title$},
+}
+
+% from pandoc
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+$pagestyle$
+\fancypagestyle{plain}{%
+    \fancyhf{}
+    $pagestyle$
+}
+
+\usepackage{titlesec}
+$if(toc)$
+   \setcounter{tocdepth}{$if(toc.tocdepth)$$toc.tocdepth$$else$2$endif$}
+$endif$
+\renewcommand{\baselinestretch}{$if(line-spacing)$$line-spacing$$else$1$endif$}
+\usepackage{indentfirst}
+\setlength{\parindent}{$if(indent)$$indent$$else$14pt$endif$}
+\setlength{\parskip}{$parskip$$if(parskip)$$else$6pt$endif$}
+
+$if(number-sections)$
+    \setcounter{secnumdepth}{4}
+    \renewcommand{\thechapter}{$if(number-sections.chapter)$$number-sections.chapter$$else$\arabic{chapter}$endif$}
+    \renewcommand{\thesection}{$if(number-sections.section)$$number-sections.section$$else$\thechapter.\arabic{section}$endif$}
+    \renewcommand{\thesubsection}{$if(number-sections.subsection)$$number-sections.subsection$$else$\thesection.\arabic{subsection}$endif$}
+    \renewcommand{\thesubsubsection}{$if(number-sections.subsubsection)$$number-sections.subsubsection$$else$\thesubsection.\arabic{subsubsection}$endif$}
+$else$
+    \setcounter{secnumdepth}{-\maxdimen}
+$endif$
+\titleformat{\chapter}
+{$if(title-format.chapter)$$title-format.chapter$$else$\bfseries\fontsize{14}{20}\selectfont\rmfamily$endif$}
+{\thechapter}{1em}{}
+
+\titleformat{\section}
+{$if(title-format.section)$$title-format.section$$else$\bfseries\fontsize{14}{20}\selectfont\rmfamily$endif$}
+{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{$if(title-format.subsection)$$title-format.subsection$$else$\bfseries\fontsize{14}{18}\selectfont\rmfamily$endif$}
+{\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+{$if(title-format.subsubsection)$$title-format.subsubsection$$else$\bfseries\fontsize{14}{16}\selectfont\rmfamily$endif$}
+{\thesubsubsection}{1em}{}
+
+\usepackage{footnotebackref}
+
+%begin tables-vrules.lua
+\usepackage{longtable,booktabs,array, multirow}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\setlength{\aboverulesep}{0pt}
+\setlength{\belowrulesep}{0pt}
+\renewcommand{\arraystretch}{1.3}
+%end tables-vrules.lua
+
+$for(header-includes)$$header-includes$$endfor$
+
+$for(customheader)$$customheader$$endfor$
+
+\usepackage{environ}
+\NewEnviron{centerboxed}{
+\noindent\makebox[\linewidth][c]{%
+\begin{minipage}[t][0.95\textheight][t]{\linewidth}%
+            \BODY
+\end{minipage}%
+}%
+}
+
+$if(toc)$
+\newcommand{\toc}[0]{
+\newpage\tableofcontents
+$if(toc.lof)$\newpage\listoffigures$endif$
+$if(toc.lot)$\newpage\listoftables$endif$
+}
+$endif$
+
+\usepackage{tikz}
+$if(tikzlib)$\usetikzlibrary{$tikzlib$}$endif$
+$if(frame_type)$
+\newcommand{\frontmatterthesisframe}[2]{
+    \begin{tikzpicture}[remember picture,overlay]
+    \centering
+    \ifnum#1=0
+        #2
+    \fi
+
+    \ifnum#1=1
+        \draw[blue!70!black,line width=4pt]
+        ([xshift=-1.5cm,yshift=-2cm]current page.north east) coordinate (A)--
+        ([xshift=3.5cm,yshift=-2cm]current page.north west) coordinate(B)--
+        ([xshift=3.5cm,yshift=2cm]current page.south west) coordinate (C)--
+        ([xshift=-1.5cm,yshift=2cm]current page.south east) coordinate(D)--cycle;
+        \draw
+        ([xshift=-0.5cm,yshift=0.5cm]A)--
+        ([xshift=0.5cm,yshift=0.5cm]B)--
+        ([xshift=0.5cm,yshift=-0.5cm]B)--
+        ([xshift=-0.5cm,yshift=-0.5cm]B)--
+        ([xshift=-0.5cm,yshift=0.5cm]C)--
+        ([xshift=0.5cm,yshift=0.5cm]C)--
+        ([xshift=0.5cm,yshift=-0.5cm]C)--
+        ([xshift=-0.5cm,yshift=-0.5cm]D)--
+        ([xshift=-0.5cm,yshift=0.5cm]D)--
+        ([xshift=0.5cm,yshift=0.5cm]D)--
+        ([xshift=0.5cm,yshift=-0.5cm]A)--
+        ([xshift=-0.5cm,yshift=-0.5cm]A)--
+        ([xshift=-0.5cm,yshift=0.5cm]A);
+        \draw
+        ([xshift=0.3cm,yshift=-0.3cm]A)--
+        ([xshift=-0.3cm,yshift=-0.3cm]B)--
+        ([xshift=-0.3cm,yshift=0.3cm]B)--
+        ([xshift=0.3cm,yshift=0.3cm]B)--
+        ([xshift=0.3cm,yshift=-0.3cm]C)--
+        ([xshift=-0.3cm,yshift=-0.3cm]C)--
+        ([xshift=-0.3cm,yshift=0.3cm]C)--
+        ([xshift=0.3cm,yshift=0.3cm]D)--
+        ([xshift=0.3cm,yshift=-0.3cm]D)--
+        ([xshift=-0.3cm,yshift=-0.3cm]D)--
+        ([xshift=-0.3cm,yshift=0.3cm]A)--
+        ([xshift=0.3cm,yshift=0.3cm]A)--
+        ([xshift=0.3cm,yshift=-0.3cm]A);
+    \fi
+
+    \ifnum#1=2
+        \draw [line width=2pt]
+        ([xshift=3.5cm,yshift=-2.5cm]current page.north west)
+        rectangle
+        ([xshift=-2cm,yshift=2.5cm]current page.south east);
+        \draw [line width=0.5pt]
+        ([xshift=3.6cm,yshift=-2.6cm]current page.north west)
+        rectangle
+        ([xshift=-2.1cm,yshift=2.6cm]current page.south east);
+    \fi
+
+    \ifnum#1=3
+        \draw[line width = 3pt]
+        ([xshift=3.5cm,yshift=-2.5cm]current page.north west)
+        rectangle
+        ([xshift=-2cm,yshift=2.5cm]current page.south east);
+    \fi
+    \end{tikzpicture}
+}
+
+\newcommand{\frontmatterthesisinfo}[2]{
+    \ifnum#1=0
+        #2
+    \fi
+    \ifnum#1=1
+        \begin{centerboxed}
+            \centering
+            \vspace*{3mm}
+            \fontsize{14}{16}\selectfont $university$ \\
+            $if(collage)$\fontsize{14}{16}\selectfont $collage$ \\$endif$
+            \fontsize{13}{16}\selectfont\textbf{$faculty$} \\
+            $if(horizontal_line)$$horizontal_line$\\$endif$
+            \vspace*{1.5cm}
+            $if(logo)$\includegraphics[height=3cm,keepaspectratio]{"$logo$"}\\$endif$
+            \vspace*{1.5cm}
+            \fontsize{18}{1}\selectfont \textbf{$title$} \\
+            \vspace{2cm}
+            $if(subtitle)${\fontsize{14}{16}\selectfont $subtitle$}  \\$endif$
+            $if(subject)${\fontsize{14}{16}\selectfont $subject$}  \\$endif$
+            $if(major)${\fontsize{14}{16}\selectfont Ngành: $major$}  \\$endif$
+            \vspace{2cm}
+            $if(instructor)$\fontsize{14}{1}\selectfont\textbf{Người hướng dẫn: $instructor$} \\$endif$
+            \vspace{2cm}
+            \raggedright{\hspace{4.2cm}\fontsize{14}{1}\selectfont \textbf{Người thực hiện:}\\}
+            \vspace{0.5cm}\hspace{5.5cm}
+            \begin{tabular}{ll}
+            $for(author)$$author.name$ & $author.id$ \\ \\[0.25em] $endfor$
+            \end{tabular}
+            \vfill
+            \centering
+            \fontsize{14}{14}\selectfont{\textbf{$position$$if(year)$ - $year$$endif$}}
+        \end{centerboxed}
+    \fi
+}
+$endif$
+
+\begin{document}
+\frontmatter
+\pagestyle{empty}
+$if(titlepage_cover)$
+\begin{titlepage}
+    \frontmatterthesisframe{$frame_type$}{$frame$}
+    \frontmatterthesisinfo{$content_type$}{$titlepage_content$}
+\end{titlepage}
+$if(twoside)$\newpage$endif$
+$endif$
+$if(second_titlepage_cover)$
+\begin{titlepage}
+    \frontmatterthesisframe{$frame_type$}{$frame$}
+    \frontmatterthesisinfo{$second_content_type$}{$second_titlepage_content$}
+\end{titlepage}
+$if(twoside)$\newpage$endif$
+$endif$
+\mainmatter
+\pagestyle{fancy}
+$body$
+\backmatter
+\end{document}
