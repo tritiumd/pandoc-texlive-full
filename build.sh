@@ -24,7 +24,7 @@ fi
 if [ ! -f multibib.lua ] || [ "redownload" = true ]
 then
     EXT_NAME=multibib
-    EXT_VERSION="v1.0.0"
+    EXT_VERSION="dd7de577e8e9ebb58f13edc3f7615141552b02c5" # Thanks wlupton to fix bug
     wget ${REPO}/${EXT_NAME}/${EXT_VERSION}/_extensions/${EXT_NAME}/${EXT_NAME}.lua
 fi
 
