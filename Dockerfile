@@ -7,7 +7,7 @@ RUN apk --no-cache add alpine-sdk bash ca-certificates cabal fakeroot \
 COPY cabal.root.config /root/.cabal/config
 
 # clone pandoc
-RUN git clone --branch=3.1.12.2  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
+RUN git clone --branch=3.1.12.3  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
 WORKDIR /usr/src/pandoc
 RUN cabal v2-update -v3
 
@@ -62,10 +62,12 @@ COPY --from=builder /usr/local/bin/pandoc-crossref /usr/local/bin/pandoc-crossre
 COPY --from=builder /usr/src/pandoc/data /usr/share/pandoc/data
 
 # Create dir for pandoc filter and template
-COPY ./pandoc /root/.pandoc
+COPY ./pandoc /pandoc
 # https://github.com/mermaid-js/mermaid-cli/blob/master/Dockerfile
-COPY puppeteer-config.json /root/puppeteer-config.json
+COPY puppeteer-config.json /pandoc/puppeteer-config.json
+
+RUN chmod -R 755 /pandoc
 
 RUN mkdir /workspace
 WORKDIR /workspace
-ENTRYPOINT ["/usr/local/bin/pandoc"]
+ENTRYPOINT ["/usr/local/bin/pandoc","--data-dir=/pandoc"]
