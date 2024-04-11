@@ -1,0 +1,19 @@
+from: markdown+emoji+yaml_metadata_block
+output-file: result.pdf
+pdf-engine: xelatex
+metadata-file: config.yaml
+template: vnthesis.tex
+filters:
+  - include-files.lua
+  - firstauthor.lua
+  - include-code-files.lua
+  - diagram.lua
+  - tables-rules.lua
+  - multibib.lua
+  - column-div.lua
+  - fix-header.lua
+  - type: json
+    path: pandoc-latex-environment
+standalone: true
+verbosity: ERROR
+listings: true

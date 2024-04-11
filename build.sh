@@ -57,4 +57,4 @@ wget ${REPO}/${EXT_NAME}/${EXT_NAME}.lua
 fi
 
 cd ../../
-docker buildx build --platform=linux/amd64,linux/arm64 . --tag pandoc-texlive-full:latest --progress=plain --no-cache
+docker buildx build --platform=linux/amd64,linux/arm64 . --tag pandoc-texlive-full:latest --progress=plain --no-cache --load

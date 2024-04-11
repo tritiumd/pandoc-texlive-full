@@ -1,5 +1,5 @@
 # Rewrite from build pandoc from source in alpine (https://github.com/pandoc/dockerfiles/blob/master/alpine/Dockerfile)
-FROM --platform=$BUILDPLATFORM alpine:edge as builder
+FROM alpine:latest as builder
 
 RUN apk --no-cache add alpine-sdk bash ca-certificates cabal fakeroot \
         ghc git gmp-dev libffi libffi-dev lua5.4-dev pkgconfig yaml zlib-dev
@@ -7,7 +7,7 @@ RUN apk --no-cache add alpine-sdk bash ca-certificates cabal fakeroot \
 COPY cabal.root.config /root/.cabal/config
 
 # clone pandoc
-RUN git clone --branch=3.1.12.3  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
+RUN git clone --branch=3.1.13  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
 WORKDIR /usr/src/pandoc
 RUN cabal v2-update -v3
 
@@ -22,17 +22,18 @@ RUN cabal v2-build --disable-tests --disable-bench \
 RUN find dist-newstyle -name 'pandoc*' -type f -perm -u+x \
          -exec strip '{}' ';' -exec cp '{}' /usr/local/bin/ ';'
 
-FROM --platform=$BUILDPLATFORM alpine:edge
+FROM alpine:latest
 
 # https://github.com/gliderlabs/docker-alpine/issues/386#issuecomment-380096034
-RUN echo -e "https://nl.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories
+RUN echo -e "https://nl.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories # for asymptote
+RUN echo -e "https://nl.alpinelinux.org/alpine/v3.18/community/" >> /etc/apk/repositories # for plantuml arm64
 
-RUN apk --no-cache add gmp libffi lua5.4 lua5.4-lpeg librsvg fontconfig freetype gnupg gzip \
-    perl tar wget xz py-pip texlive-full asymptote plantuml graphviz msttcorefonts-installer \
-    nodejs npm chromium font-noto-cjk font-noto-emoji  terminus-font ttf-dejavu ttf-freefont  \
-    ttf-font-awesome ttf-inconsolata ttf-linux-libertine
+RUN apk --no-cache add lua5.4-lpeg librsvg perl py3-pip nodejs npm texlive-full asymptote wget zip \
+    plantuml graphviz chromium font-noto-cjk-extra font-noto-emoji font-noto-all ttf-font-awesome tar \
+    font-jetbrains-mono font-montserrat font-opensans font-inter msttcorefonts-installer font-inconsolata \
+    font-linux-libertine font-roboto font-roboto-mono font-roboto-flex
 
-RUN update-ms-fonts && fc-cache -f
+RUN update-ms-fonts
 
 # TeXLive binaries location
 ARG texlive_bin="/opt/texlive/texdir/bin"

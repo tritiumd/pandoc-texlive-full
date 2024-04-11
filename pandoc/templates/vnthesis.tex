@@ -30,7 +30,6 @@ $endif$
 \usepackage{amsmath}
 \usepackage{utfsym}
 \usepackage{pmboxdraw}
-\usepackage{noto-mono}
 
 \usepackage{xcolor}
 \definecolor{deepblue}{RGB}{0, 0, 112}
@@ -40,12 +39,20 @@ $endif$
 \definecolor{bubblegum}{RGB}{255, 115, 232}
 
 \usepackage{listings}
+\newfontfamily{\jetbrainsmono}{JetBrainsMono}[
+    Path = /usr/share/fonts/jetbrains-mono/,
+    Extension = .ttf,
+    UprightFont    = *-Regular,
+    ItalicFont     = *-Italic,
+    BoldFont       = *-Bold,
+    BoldItalicFont = *-BoldItalic,
+]
 \lstset{
     aboveskip=5mm,
     belowskip=5mm,
     showstringspaces=false,
     columns=flexible,
-    basicstyle={\small\notomono},
+    basicstyle=\jetbrainsmono,
     numbers=left,
     numberfirstline,
     firstnumber=1,
@@ -207,7 +214,9 @@ $for(header-includes)$
     $header-includes$
 $endfor$
 
-$for(customheader)$$customheader$$endfor$
+$for(customheader)$
+    $customheader$
+$endfor$
 
 \usepackage{environ}
 \NewEnviron{centerboxed}{
