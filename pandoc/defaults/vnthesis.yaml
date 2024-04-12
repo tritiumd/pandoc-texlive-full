@@ -12,8 +12,9 @@ filters:
   - multibib.lua
   - column-div.lua
   - fix-header.lua
+  - caption.lua
   - type: json
     path: pandoc-latex-environment
 standalone: true
 verbosity: ERROR
-listings: true
+highlight-style: ${USERDATA}/themes/github-light.theme

@@ -35,6 +35,7 @@ RUN apk --no-cache add lua5.4-lpeg librsvg perl py3-pip nodejs npm texlive-full 
     font-croscore
 
 RUN update-ms-fonts
+RUN fc-cache -f -v
 
 # TeXLive binaries location
 ARG texlive_bin="/opt/texlive/texdir/bin"
@@ -72,4 +73,5 @@ RUN chmod -R 755 /pandoc
 
 RUN mkdir /workspace
 WORKDIR /workspace
+ARG USERDATA=/pandoc
 ENTRYPOINT ["/usr/local/bin/pandoc","--data-dir=/pandoc"]

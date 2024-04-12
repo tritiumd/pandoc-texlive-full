@@ -1,0 +1,4 @@
+[submodule "kde-syntax-highlighting"]
+	path = kde-syntax-highlighting
+	url = https://github.com/KDE/syntax-highlighting
+	shallow = true

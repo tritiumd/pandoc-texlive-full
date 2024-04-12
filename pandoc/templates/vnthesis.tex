@@ -33,29 +33,57 @@ $endif$
 
 \usepackage{xcolor}
 \definecolor{deepblue}{RGB}{0, 0, 112}
-\definecolor{deepgreen}{RGB}{0, 112, 0}
-\definecolor{deepred}{RGB}{153, 0, 0}
 \definecolor{cyclamen}{RGB}{255, 145, 237}
 \definecolor{bubblegum}{RGB}{255, 115, 232}
+\definecolor{silver}{RGB}{208,208,208}
 
+$if(monofont)$
+\setmonofont$monofont$
+$else$
+\newfontfamily{\mono}{JetBrainsMono}[ Path = /usr/share/fonts/jetbrains-mono/, Extension = .ttf, UprightFont    = *-Regular, ItalicFont     = *-Italic, BoldFont       = *-Bold, BoldItalicFont = *-BoldItalic, ]
+$endif$
+
+$if(highlighting-macros)$
+$highlighting-macros$
+\renewcommand{\theFancyVerbLine}{\sffamily \textcolor[rgb]{0.5,0.5,1.0}{\small \oldstylenums{\arabic{FancyVerbLine}}}}
+\usepackage{fvextra}
+\RecustomVerbatimEnvironment{Highlighting}{Verbatim}{
+    numbers=left,
+    fontsize=\normalsize,
+    numberfirstline,
+    breaknonspaceingroup=true,
+    stepnumber=5,
+    breaklines=true,
+    breakanywhere=true,
+    breakautoindent=true,
+    tabsize=2,
+    frame=single,
+    framesep=3mm,
+    rulecolor=\color{silver},
+    commandchars=\\\{\}
+}\RecustomVerbatimEnvironment{verbatim}{Verbatim}{
+    numbers=left,
+    fontsize=\normalsize,
+    numberfirstline,
+    breaknonspaceingroup=true,
+    stepnumber=5,
+    breaklines=true,
+    breakanywhere=true,
+    breakautoindent=true,
+    tabsize=2,
+    frame=single,
+    framesep=3mm,
+    rulecolor=\color{silver},
+}
+$else$
 \usepackage{listings}
-\newfontfamily{\jetbrainsmono}{JetBrainsMono}[
-    Path = /usr/share/fonts/jetbrains-mono/,
-    Extension = .ttf,
-    UprightFont    = *-Regular,
-    ItalicFont     = *-Italic,
-    BoldFont       = *-Bold,
-    BoldItalicFont = *-BoldItalic,
-]
 \lstset{
     aboveskip=5mm,
     belowskip=5mm,
     showstringspaces=false,
     columns=flexible,
-    basicstyle=\jetbrainsmono,
     numbers=left,
     numberfirstline,
-    firstnumber=1,
     stepnumber=5,
     numberstyle=\small\color{gray},
     keywordstyle=\bfseries\color{deepblue},
@@ -66,13 +94,13 @@ $endif$
     breaklines=true,
     breakatwhitespace=false,
     breakautoindent=true,
-    postbreak=\mbox{\textcolor{deepblue}{$$\hookrightarrow$$}\space},
     frame=shadowbox,
     rulesepcolor=\color{bubblegum},
     rulecolor=\color{cyclamen},
     tabsize=2,
     texcl=true,
 }
+$endif$
 
 \usepackage[]{hyperref}
 \usepackage{bookmark}
@@ -154,13 +182,13 @@ $endif$
 \fancyhf{}
 $pagestyle$
 \fancypagestyle{plain}{%
-    \fancyhf{}
-    $pagestyle$
+\fancyhf{}
+$pagestyle$
 }
 
 \usepackage{titlesec}
 $if(toc)$
-   \setcounter{tocdepth}{$if(toc.tocdepth)$$toc.tocdepth$$else$2$endif$}
+\setcounter{tocdepth}{$if(toc.tocdepth)$$toc.tocdepth$$else$2$endif$}
 $endif$
 \renewcommand{\baselinestretch}{$if(line-spacing)$$line-spacing$$else$1$endif$}
 \usepackage{indentfirst}
@@ -168,13 +196,13 @@ $endif$
 \setlength{\parskip}{$parskip$$if(parskip)$$else$6pt$endif$}
 
 $if(number-sections)$
-    \setcounter{secnumdepth}{4}
-    \renewcommand{\thechapter}{$if(number-sections.chapter)$$number-sections.chapter$$else$\arabic{chapter}$endif$}
-    \renewcommand{\thesection}{$if(number-sections.section)$$number-sections.section$$else$\thechapter.\arabic{section}$endif$}
-    \renewcommand{\thesubsection}{$if(number-sections.subsection)$$number-sections.subsection$$else$\thesection.\arabic{subsection}$endif$}
-    \renewcommand{\thesubsubsection}{$if(number-sections.subsubsection)$$number-sections.subsubsection$$else$\thesubsection.\arabic{subsubsection}$endif$}
+\setcounter{secnumdepth}{4}
+\renewcommand{\thechapter}{$if(number-sections.chapter)$$number-sections.chapter$$else$\arabic{chapter}$endif$}
+\renewcommand{\thesection}{$if(number-sections.section)$$number-sections.section$$else$\thechapter.\arabic{section}$endif$}
+\renewcommand{\thesubsection}{$if(number-sections.subsection)$$number-sections.subsection$$else$\thesection.\arabic{subsection}$endif$}
+\renewcommand{\thesubsubsection}{$if(number-sections.subsubsection)$$number-sections.subsubsection$$else$\thesubsection.\arabic{subsubsection}$endif$}
 $else$
-    \setcounter{secnumdepth}{-\maxdimen}
+\setcounter{secnumdepth}{-\maxdimen}
 $endif$
 \titleformat{\chapter}
 {$if(title-format.chapter)$$title-format.chapter$$else$\bfseries\fontsize{14}{20}\selectfont\rmfamily$endif$}
@@ -211,29 +239,29 @@ $endif$
 %end tables-vrules.lua
 
 $for(header-includes)$
-    $header-includes$
+$header-includes$
 $endfor$
 
 $for(customheader)$
-    $customheader$
+$customheader$
 $endfor$
 
 \usepackage{environ}
 \NewEnviron{centerboxed}{
 \noindent\makebox[\linewidth][c]{%
 \begin{minipage}[t][0.95\textheight][t]{\linewidth}%
-            \BODY
+\BODY
 \end{minipage}%
 }%
 }
 
 \NewEnviron{sign}{
-    \hfill\begin{tabular}{c}
-        {\it $if(position)$$position$, $endif$$if(day)$ngày $day$ $endif$$if(month)$tháng $month$ $endif$$if(year)$năm $year$$endif$}
-        \\ \BODY
-        \\ \\[1cm]
-        {$if(author)$\bf $firstauthor$$endif$}\\
-    \end{tabular}%
+\hfill\begin{tabular}{c}
+{\it $if(position)$$position$, $endif$$if(day)$ngày $day$ $endif$$if(month)$tháng $month$ $endif$$if(year)$năm $year$$endif$}
+\\ \BODY
+\\ \\[1cm]
+{$if(author)$\bf $firstauthor$$endif$}\\
+\end{tabular}%
 }
 
 $if(toc)$
@@ -248,101 +276,101 @@ $endif$
 $if(tikzlib)$\usetikzlibrary{$tikzlib$}$endif$
 $if(frame_type)$
 \newcommand{\frontmatterthesisframe}[2]{
-    \begin{tikzpicture}[remember picture,overlay]
-    \centering
-    \ifnum#1=0
-        #2
-    \fi
+\begin{tikzpicture}[remember picture,overlay]
+\centering
+\ifnum#1=0
+#2
+\fi
 
-    \ifnum#1=1
-        \draw[blue!70!black,line width=4pt]
-        ([xshift=-1.5cm,yshift=-2cm]current page.north east) coordinate (A)--
-        ([xshift=3.5cm,yshift=-2cm]current page.north west) coordinate(B)--
-        ([xshift=3.5cm,yshift=2cm]current page.south west) coordinate (C)--
-        ([xshift=-1.5cm,yshift=2cm]current page.south east) coordinate(D)--cycle;
-        \draw
-        ([xshift=-0.5cm,yshift=0.5cm]A)--
-        ([xshift=0.5cm,yshift=0.5cm]B)--
-        ([xshift=0.5cm,yshift=-0.5cm]B)--
-        ([xshift=-0.5cm,yshift=-0.5cm]B)--
-        ([xshift=-0.5cm,yshift=0.5cm]C)--
-        ([xshift=0.5cm,yshift=0.5cm]C)--
-        ([xshift=0.5cm,yshift=-0.5cm]C)--
-        ([xshift=-0.5cm,yshift=-0.5cm]D)--
-        ([xshift=-0.5cm,yshift=0.5cm]D)--
-        ([xshift=0.5cm,yshift=0.5cm]D)--
-        ([xshift=0.5cm,yshift=-0.5cm]A)--
-        ([xshift=-0.5cm,yshift=-0.5cm]A)--
-        ([xshift=-0.5cm,yshift=0.5cm]A);
-        \draw
-        ([xshift=0.3cm,yshift=-0.3cm]A)--
-        ([xshift=-0.3cm,yshift=-0.3cm]B)--
-        ([xshift=-0.3cm,yshift=0.3cm]B)--
-        ([xshift=0.3cm,yshift=0.3cm]B)--
-        ([xshift=0.3cm,yshift=-0.3cm]C)--
-        ([xshift=-0.3cm,yshift=-0.3cm]C)--
-        ([xshift=-0.3cm,yshift=0.3cm]C)--
-        ([xshift=0.3cm,yshift=0.3cm]D)--
-        ([xshift=0.3cm,yshift=-0.3cm]D)--
-        ([xshift=-0.3cm,yshift=-0.3cm]D)--
-        ([xshift=-0.3cm,yshift=0.3cm]A)--
-        ([xshift=0.3cm,yshift=0.3cm]A)--
-        ([xshift=0.3cm,yshift=-0.3cm]A);
-    \fi
+\ifnum#1=1
+\draw[blue!70!black,line width=4pt]
+([xshift=-1.5cm,yshift=-2cm]current page.north east) coordinate (A)--
+([xshift=3.5cm,yshift=-2cm]current page.north west) coordinate(B)--
+([xshift=3.5cm,yshift=2cm]current page.south west) coordinate (C)--
+([xshift=-1.5cm,yshift=2cm]current page.south east) coordinate(D)--cycle;
+\draw
+([xshift=-0.5cm,yshift=0.5cm]A)--
+([xshift=0.5cm,yshift=0.5cm]B)--
+([xshift=0.5cm,yshift=-0.5cm]B)--
+([xshift=-0.5cm,yshift=-0.5cm]B)--
+([xshift=-0.5cm,yshift=0.5cm]C)--
+([xshift=0.5cm,yshift=0.5cm]C)--
+([xshift=0.5cm,yshift=-0.5cm]C)--
+([xshift=-0.5cm,yshift=-0.5cm]D)--
+([xshift=-0.5cm,yshift=0.5cm]D)--
+([xshift=0.5cm,yshift=0.5cm]D)--
+([xshift=0.5cm,yshift=-0.5cm]A)--
+([xshift=-0.5cm,yshift=-0.5cm]A)--
+([xshift=-0.5cm,yshift=0.5cm]A);
+\draw
+([xshift=0.3cm,yshift=-0.3cm]A)--
+([xshift=-0.3cm,yshift=-0.3cm]B)--
+([xshift=-0.3cm,yshift=0.3cm]B)--
+([xshift=0.3cm,yshift=0.3cm]B)--
+([xshift=0.3cm,yshift=-0.3cm]C)--
+([xshift=-0.3cm,yshift=-0.3cm]C)--
+([xshift=-0.3cm,yshift=0.3cm]C)--
+([xshift=0.3cm,yshift=0.3cm]D)--
+([xshift=0.3cm,yshift=-0.3cm]D)--
+([xshift=-0.3cm,yshift=-0.3cm]D)--
+([xshift=-0.3cm,yshift=0.3cm]A)--
+([xshift=0.3cm,yshift=0.3cm]A)--
+([xshift=0.3cm,yshift=-0.3cm]A);
+\fi
 
-    \ifnum#1=2
-        \draw [line width=2pt]
-        ([xshift=3.5cm,yshift=-2.5cm]current page.north west)
-        rectangle
-        ([xshift=-2cm,yshift=2.5cm]current page.south east);
-        \draw [line width=0.5pt]
-        ([xshift=3.6cm,yshift=-2.6cm]current page.north west)
-        rectangle
-        ([xshift=-2.1cm,yshift=2.6cm]current page.south east);
-    \fi
+\ifnum#1=2
+\draw [line width=2pt]
+([xshift=3.5cm,yshift=-2.5cm]current page.north west)
+rectangle
+([xshift=-2cm,yshift=2.5cm]current page.south east);
+\draw [line width=0.5pt]
+([xshift=3.6cm,yshift=-2.6cm]current page.north west)
+rectangle
+([xshift=-2.1cm,yshift=2.6cm]current page.south east);
+\fi
 
-    \ifnum#1=3
-        \draw[line width = 3pt]
-        ([xshift=3.5cm,yshift=-2.5cm]current page.north west)
-        rectangle
-        ([xshift=-2cm,yshift=2.5cm]current page.south east);
-    \fi
-    \end{tikzpicture}
+\ifnum#1=3
+\draw[line width = 3pt]
+([xshift=3.5cm,yshift=-2.5cm]current page.north west)
+rectangle
+([xshift=-2cm,yshift=2.5cm]current page.south east);
+\fi
+\end{tikzpicture}
 }
 
 \newcommand{\frontmatterthesisinfo}[2]{
-    \ifnum#1=0
-        #2
-    \fi
-    \ifnum#1=1
-        \begin{centerboxed}
-            \centering
-            \vspace*{3mm}
-            \fontsize{14}{16}\selectfont $university$ \\
-            $if(collage)$\fontsize{14}{16}\selectfont $collage$ \\$endif$
-            \fontsize{13}{16}\selectfont\textbf{$faculty$} \\
-            $if(horizontal_line)$$horizontal_line$\\$endif$
-            \vspace*{1.5cm}
-            $if(logo)$\includegraphics[height=3cm,keepaspectratio]{"$logo$"}\\$endif$
-            \vspace*{1.5cm}
-            \fontsize{18}{1}\selectfont \textbf{$title$} \\
-            \vspace{2cm}
-            $if(subtitle)${\fontsize{14}{16}\selectfont $subtitle$}  \\$endif$
-            $if(subject)${\fontsize{14}{16}\selectfont $subject$}  \\$endif$
-            $if(major)${\fontsize{14}{16}\selectfont Ngành: $major$}  \\$endif$
-            \vspace{2cm}
-            $if(instructor)$\fontsize{14}{1}\selectfont\textbf{Người hướng dẫn: $instructor$} \\$endif$
-            \vspace{2cm}
-            \raggedright{\hspace{4.2cm}\fontsize{14}{1}\selectfont \textbf{Người thực hiện:}\\}
-            \vspace{0.5cm}\hspace{5.5cm}
-            \begin{tabular}{ll}
-            $for(author)$$author.name$ & $author.id$ \\ \\[0.25em] $endfor$
-            \end{tabular}
-            \vfill
-            \centering
-            \fontsize{14}{14}\selectfont{\textbf{$position$$if(year)$ - $year$$endif$}}
-        \end{centerboxed}
-    \fi
+\ifnum#1=0
+#2
+\fi
+\ifnum#1=1
+\begin{centerboxed}
+\centering
+\vspace*{3mm}
+\fontsize{14}{16}\selectfont $university$ \\
+$if(collage)$\fontsize{14}{16}\selectfont $collage$ \\$endif$
+\fontsize{13}{16}\selectfont\textbf{$faculty$} \\
+$if(horizontal_line)$$horizontal_line$\\$endif$
+\vspace*{1.5cm}
+$if(logo)$\includegraphics[height=3cm,keepaspectratio]{"$logo$"}\\$endif$
+\vspace*{1.5cm}
+\fontsize{18}{1}\selectfont \textbf{$title$} \\
+\vspace{2cm}
+$if(subtitle)${\fontsize{14}{16}\selectfont $subtitle$}  \\$endif$
+$if(subject)${\fontsize{14}{16}\selectfont $subject$}  \\$endif$
+$if(major)${\fontsize{14}{16}\selectfont Ngành: $major$}  \\$endif$
+\vspace{2cm}
+$if(instructor)$\fontsize{14}{1}\selectfont\textbf{Người hướng dẫn: $instructor$} \\$endif$
+\vspace{2cm}
+\raggedright{\hspace{4.2cm}\fontsize{14}{1}\selectfont \textbf{Người thực hiện:}\\}
+\vspace{0.5cm}\hspace{5.5cm}
+\begin{tabular}{ll}
+$for(author)$$author.name$ & $author.id$ \\ \\[0.25em] $endfor$
+\end{tabular}
+\vfill
+\centering
+\fontsize{14}{14}\selectfont{\textbf{$position$$if(year)$ - $year$$endif$}}
+\end{centerboxed}
+\fi
 }
 $endif$
 
@@ -351,15 +379,15 @@ $endif$
 \pagestyle{empty}
 $if(titlepage_cover)$
 \begin{titlepage}
-    \frontmatterthesisframe{$frame_type$}{$frame$}
-    \frontmatterthesisinfo{$content_type$}{$titlepage_content$}
+\frontmatterthesisframe{$frame_type$}{$frame$}
+\frontmatterthesisinfo{$content_type$}{$titlepage_content$}
 \end{titlepage}
 $if(twoside)$\newpage$endif$
 $endif$
 $if(second_titlepage_cover)$
 \begin{titlepage}
-    \frontmatterthesisframe{$frame_type$}{$frame$}
-    \frontmatterthesisinfo{$second_content_type$}{$second_titlepage_content$}
+\frontmatterthesisframe{$frame_type$}{$frame$}
+\frontmatterthesisinfo{$second_content_type$}{$second_titlepage_content$}
 \end{titlepage}
 $if(twoside)$\newpage$endif$
 $endif$
