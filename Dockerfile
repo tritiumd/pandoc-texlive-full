@@ -29,9 +29,10 @@ RUN echo -e "https://nl.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/reposi
 RUN echo -e "https://nl.alpinelinux.org/alpine/v3.18/community/" >> /etc/apk/repositories # for plantuml arm64
 
 RUN apk --no-cache add lua5.4-lpeg librsvg perl py3-pip nodejs npm texlive-full asymptote wget zip \
-    plantuml graphviz chromium font-noto-cjk-extra font-noto-emoji font-noto-all ttf-font-awesome tar \
+    plantuml graphviz chromium font-noto-cjk-extra font-noto-emoji font-noto ttf-font-awesome tar \
     font-jetbrains-mono font-montserrat font-opensans font-inter msttcorefonts-installer font-inconsolata \
-    font-linux-libertine font-roboto font-roboto-mono font-roboto-flex
+    font-linux-libertine font-liberation font-roboto font-roboto-mono font-roboto-flex font-mononoki \
+    font-croscore
 
 RUN update-ms-fonts
 
