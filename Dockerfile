@@ -29,13 +29,12 @@ RUN echo -e "https://nl.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/reposi
 RUN echo -e "https://nl.alpinelinux.org/alpine/v3.18/community/" >> /etc/apk/repositories # for plantuml arm64
 
 RUN apk --no-cache add lua5.4-lpeg librsvg perl py3-pip nodejs npm texlive-full asymptote wget zip \
-    plantuml graphviz chromium font-noto-cjk-extra font-noto-emoji font-noto ttf-font-awesome tar \
-    font-jetbrains-mono font-montserrat font-opensans font-inter msttcorefonts-installer font-inconsolata \
-    font-linux-libertine font-liberation font-roboto font-roboto-mono font-roboto-flex font-mononoki \
-    font-croscore
+    plantuml graphviz chromium font-noto-cjk-extra tar font-jetbrains-mono msttcorefonts-installer \
+    gcc python3-dev musl-dev linux-headers
 
 RUN update-ms-fonts
-RUN fc-cache -f -v
+COPY 09-texlive-fonts.conf /etc/fonts/conf.d
+RUN fc-cache -r -v
 
 # TeXLive binaries location
 ARG texlive_bin="/opt/texlive/texdir/bin"
@@ -54,24 +53,24 @@ RUN rm -rf /var/lib/cache/* /var/lib/log/* /usr/share/groff/* /usr/share/info/* 
     /var/cache/man/* /usr/share/man/* /usr/share/doc/*
 
 # Install python extension
-RUN pip3 install --break-system-packages --no-cache-dir pandoc-latex-environment
+RUN pip3 install --break-system-packages --no-cache-dir pandoc-latex-environment pandoc-xnos
 
 # Install nodejs extension
 RUN npm install -g @mermaid-js/mermaid-cli
 RUN PATH="$(npm root -g)/.bin:${PATH}"
 
-COPY --from=builder /usr/local/bin/pandoc /usr/local/bin/pandoc
-COPY --from=builder /usr/local/bin/pandoc-crossref /usr/local/bin/pandoc-crossref
-COPY --from=builder /usr/src/pandoc/data /usr/share/pandoc/data
-
 # Create dir for pandoc filter and template
-COPY ./pandoc /pandoc
+COPY --chmod=755 ./pandoc /pandoc
 # https://github.com/mermaid-js/mermaid-cli/blob/master/Dockerfile
 COPY puppeteer-config.json /pandoc/puppeteer-config.json
-
-RUN chmod -R 755 /pandoc
 
 RUN mkdir /workspace
 WORKDIR /workspace
 ARG USERDATA=/pandoc
+
+# Copy pandoc
+COPY --from=builder /usr/local/bin/pandoc /usr/local/bin/pandoc
+COPY --from=builder /usr/local/bin/pandoc-crossref /usr/local/bin/pandoc-crossref
+COPY --from=builder /usr/src/pandoc/data /usr/share/pandoc/data
+
 ENTRYPOINT ["/usr/local/bin/pandoc","--data-dir=/pandoc"]
