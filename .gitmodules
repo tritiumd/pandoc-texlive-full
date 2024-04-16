@@ -2,3 +2,8 @@
 	path = kde-syntax-highlighting
 	url = https://github.com/KDE/syntax-highlighting
 	shallow = true
+
+[submodule "pandoc/csl"]
+	path = pandoc/csl
+	url = https://github.com/citation-style-language/styles
+	shallow = true
