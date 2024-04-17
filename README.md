@@ -48,3 +48,9 @@ fc-list  | cut -d\  -f2-99 | cut -d: -f1 | sort -u
 - [Pandoc Team](https://github.com/pandoc)
 - [Pandoc-Ext Team](https://github.com/pandoc-ext)
 - chrisaga for some [filter](https://github.com/chrisaga/hk-pandoc-filters)
+- [pandoc-latex-template](https://github.com/Wandmalfarbe/pandoc-latex-template)
+- [pandoc-leaflet-template](https://gitlab.com/daamien/pandoc-leaflet-template)
+- [pandoc-letter](https://github.com/aaronwolen/pandoc-letter)
+- [KDE/syntax-highlighting](https://github.com/KDE/syntax-highlighting)
+- [citation-style-language/styles](https://github.com/citation-style-language/styles)
+- And many answers from Github and StackOverflow I forgot
