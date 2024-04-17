@@ -19,12 +19,85 @@ $endif$
 \usepackage[utf8]{vietnam}
 \usepackage[utf8]{inputenc}
 \usepackage[vietnamese]{babel}
-\usepackage[vietnamese=nohyphenation]{hyphsubst}
 
 \usepackage{fontspec}
 \usepackage{pifont}
-\setmainfont{$if(font)$$font$$else$Times New Roman$endif$}
-\defaultfontfeatures{Extension = .otf}
+$if(mainfont)$
+\setmainfont{$mainfont$}[
+    $for(mainfontoptions)$
+    $mainfontoptions$,
+    $endfor$
+]
+$endif$
+$if(sansfont)$
+\setsansfont{$sansfont$}[
+    $for(sansfontoptions)$
+    $sansfontoptions$,
+    $endfor$
+]
+$endif$
+$if(monofont)$
+\setmonofont{$monofont$}[
+    $for(monofontoptions)$
+    $monofontoptions$,
+    $endfor$
+]
+$endif$
+$for(fontfamilies)$
+\newfontfamily{$fontfamilies.name$}[
+    $for(fontfamilies.options)$
+    $fontfamilies.options$,
+    $endfor$
+]{$fontfamilies.font$}
+    $endfor$
+    $if(mathfont)$
+    $if(mathspec)$
+\ifXeTeX
+\setmathfont(Digits,Latin,Greek){$mathfont$}[
+    $for(mathfontoptions)$
+    $mathfontoptions$,
+    $endfor$
+]
+\else
+\setmathfont{$mathfont$}[
+    $for(mathfontoptions)$
+    $mathfontoptions$,
+    $endfor$
+]
+\fi
+$else$
+\setmathfont{$mathfont$}[
+    $for(mathfontoptions)$
+    $mathfontoptions$,
+    $endfor$
+]
+$endif$
+$endif$
+$if(CJKmainfont)$
+\ifXeTeX
+\usepackage{xeCJK}
+\setCJKmainfont{$CJKmainfont$}[
+    $for(CJKoptions)$
+    $CJKoptions$,
+    $endfor$
+]
+$if(CJKsansfont)$
+\setCJKsansfont{$CJKsansfont$}[
+    $for(CJKoptions)$
+    $CJKoptions$,
+    $endfor$
+]
+$endif$
+$if(CJKmonofont)$
+\setCJKmonofont{$CJKmonofont$}[
+$for(CJKoptions)$
+$CJKoptions$,
+$endfor$
+]
+$endif$
+\fi
+$endif$
+
 \usepackage{fontawesome5}
 \usepackage{unicode-math}
 \usepackage{amsmath}
@@ -37,18 +110,13 @@ $endif$
 \definecolor{bubblegum}{RGB}{255, 115, 232}
 \definecolor{silver}{RGB}{208,208,208}
 
-$if(monofont)$
-\setmonofont$monofont$
-$else$
-\newfontfamily{\mono}{JetBrainsMono}[ Path = /usr/share/fonts/jetbrains-mono/, Extension = .ttf, UprightFont    = *-Regular, ItalicFont     = *-Italic, BoldFont       = *-Bold, BoldItalicFont = *-BoldItalic, ]
-$endif$
-
 $if(highlighting-macros)$
 $highlighting-macros$
 \renewcommand{\theFancyVerbLine}{\sffamily \textcolor[rgb]{0.5,0.5,1.0}{\small \oldstylenums{\arabic{FancyVerbLine}}}}
 \usepackage{fvextra}
 \RecustomVerbatimEnvironment{Highlighting}{Verbatim}{
     numbers=left,
+    xleftmargin=1.5em,
     fontsize=\normalsize,
     numberfirstline,
     breaknonspaceingroup=true,
@@ -63,6 +131,7 @@ $highlighting-macros$
     commandchars=\\\{\}
 }\RecustomVerbatimEnvironment{verbatim}{Verbatim}{
     numbers=left,
+    xleftmargin=1.5em,
     fontsize=\normalsize,
     numberfirstline,
     breaknonspaceingroup=true,
@@ -80,6 +149,7 @@ $else$
 \lstset{
     aboveskip=5mm,
     belowskip=5mm,
+    xleftmargin=1.5em,
     showstringspaces=false,
     columns=flexible,
     numbers=left,
@@ -94,17 +164,17 @@ $else$
     breaklines=true,
     breakatwhitespace=false,
     breakautoindent=true,
-    frame=shadowbox,
-    rulesepcolor=\color{bubblegum},
-    rulecolor=\color{cyclamen},
+    frame=single,
+    framesep=3mm,
+    rulecolor=\color{silver},
     tabsize=2,
     texcl=true,
+    captionpos=b
 }
 $endif$
 
 \usepackage[]{hyperref}
 \usepackage{bookmark}
-\usepackage{color}
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
@@ -242,10 +312,6 @@ $for(header-includes)$
 $header-includes$
 $endfor$
 
-$for(customheader)$
-$customheader$
-$endfor$
-
 \usepackage{environ}
 \NewEnviron{centerboxed}{
 \noindent\makebox[\linewidth][c]{%
@@ -373,7 +439,12 @@ $for(author)$$author.name$ & $author.id$ \\ \\[0.25em] $endfor$
 \fi
 }
 $endif$
-
+% fix toc use san serif font in header
+\setkomafont{chapter}{\normalfont\bfseries\large}
+\RedeclareSectionCommands[
+tocentryformat=\usekomafont{chapter},
+tocpagenumberformat=\usekomafont{chapter}
+]{chapter}
 \begin{document}
 \frontmatter
 \pagestyle{empty}

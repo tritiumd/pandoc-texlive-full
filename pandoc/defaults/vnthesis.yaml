@@ -5,16 +5,18 @@ metadata-file: config.yaml
 template: vnthesis.tex
 filters:
   - include-files.lua
-  - firstauthor.lua
   - include-code-files.lua
+  - firstauthor.lua
   - diagram.lua
-  - tables-rules.lua
-  - multibib.lua
-  - column-div.lua
-  - fix-header.lua
-  - caption.lua
   - type: json
     path: pandoc-latex-environment
+  - tables-rules.lua
+  - column-div.lua
+  - fix-header.lua
+  - type: json
+    path: pandoc-xnos
+  - verbatim-captioning.lua
+  - multibib.lua
 standalone: true
 verbosity: ERROR
 highlight-style: ${USERDATA}/themes/github-light.theme
