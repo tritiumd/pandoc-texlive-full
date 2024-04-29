@@ -30,7 +30,7 @@ RUN echo -e "https://nl.alpinelinux.org/alpine/v3.18/community/" >> /etc/apk/rep
 
 RUN apk --no-cache add lua5.4-lpeg librsvg perl py3-pip nodejs npm texlive-full asymptote wget zip \
     plantuml graphviz chromium font-noto-cjk-extra tar font-jetbrains-mono msttcorefonts-installer \
-    gcc python3-dev musl-dev linux-headers
+    gcc python3-dev musl-dev linux-headers git
 
 RUN update-ms-fonts
 COPY 09-texlive-fonts.conf /etc/fonts/conf.d
@@ -53,7 +53,9 @@ RUN rm -rf /var/lib/cache/* /var/lib/log/* /usr/share/groff/* /usr/share/info/* 
     /var/cache/man/* /usr/share/man/* /usr/share/doc/*
 
 # Install python extension
-RUN pip3 install --break-system-packages --no-cache-dir pandoc-latex-environment pandoc-xnos
+RUN pip3 install --break-system-packages --no-cache-dir pandoc-latex-environment
+RUN pip3 install --break-system-packages --no-cache-dir git+https://github.com/ngocptblaplafla/pandoc-xnos.git
+## fix xnos pandoc version error
 
 # Install nodejs extension
 RUN npm install -g @mermaid-js/mermaid-cli
@@ -72,5 +74,5 @@ ARG USERDATA=/pandoc
 COPY --from=builder /usr/local/bin/pandoc /usr/local/bin/pandoc
 COPY --from=builder /usr/local/bin/pandoc-crossref /usr/local/bin/pandoc-crossref
 COPY --from=builder /usr/src/pandoc/data /usr/share/pandoc/data
-
-ENTRYPOINT ["/usr/local/bin/pandoc","--data-dir=/pandoc"]
+COPY --chmod=755 entrypoint.sh /bin/entrypoint
+ENTRYPOINT ["entrypoint"]
