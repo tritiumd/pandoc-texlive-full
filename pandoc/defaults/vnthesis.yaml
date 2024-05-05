@@ -1,5 +1,5 @@
 from: markdown+emoji+yaml_metadata_block
-output-file: result.pdf
+output-file: result.tex
 pdf-engine: xelatex
 metadata-file: config.yaml
 template: vnthesis.tex
@@ -16,7 +16,9 @@ filters:
   - type: json
     path: pandoc-xnos
   - verbatim-captioning.lua
-  - multibib.lua
 standalone: true
 verbosity: ERROR
-highlight-style: ${USERDATA}/themes/github-light.theme
+highlight-style: ${USERDATA}/syntax-highlighting/data/themes/github-light.theme
+citeproc: true
+bibliography: refs.bib
+csl: ${USERDATA}/csl/apa.csl

@@ -1,5 +1,5 @@
-[submodule "kde-syntax-highlighting"]
-	path = kde-syntax-highlighting
+[submodule "pandoc/kde-syntax-highlighting"]
+	path = pandoc/syntax-highlighting
 	url = https://github.com/KDE/syntax-highlighting
 	shallow = true
 
