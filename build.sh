@@ -61,7 +61,5 @@ downloadFilter $REPO tables-rules master $redownload
 downloadFilter $REPO column-div master $redownload
 
 cd ../../
-git submodule update
-cp -rf kde-syntax-highlighting/data/syntax pandoc/
-cp -rf kde-syntax-highlighting/data/themes pandoc
+git submodule update --recursive --remote
 docker buildx build --platform=linux/amd64,linux/arm64 . --tag pandoc-texlive-full:latest --progress=plain --no-cache --load

@@ -16,7 +16,9 @@ filters:
   - type: json
     path: pandoc-xnos
   - verbatim-captioning.lua
-  - multibib.lua
 standalone: true
 verbosity: ERROR
-highlight-style: ${USERDATA}/themes/github-light.theme
+highlight-style: ${USERDATA}/syntax-highlighting/data/themes/github-light.theme
+citeproc: true
+bibliography: refs.bib
+csl: ${USERDATA}/csl/apa.csl
