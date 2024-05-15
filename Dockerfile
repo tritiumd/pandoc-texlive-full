@@ -17,7 +17,7 @@ COPY cabal.project.local /usr/src/pandoc/cabal.project.local
 
 ## Build with pandoc-crossref
 RUN cabal v2-build --disable-tests --disable-bench \
-          --jobs . pandoc-cli pandoc-crossref
+          --jobs . pandoc-cli
 
 RUN find dist-newstyle -name 'pandoc*' -type f -perm -u+x \
          -exec strip '{}' ';' -exec cp '{}' /usr/local/bin/ ';'
@@ -72,7 +72,7 @@ ARG USERDATA=/pandoc
 
 # Copy pandoc
 COPY --from=builder /usr/local/bin/pandoc /usr/local/bin/pandoc
-COPY --from=builder /usr/local/bin/pandoc-crossref /usr/local/bin/pandoc-crossref
+#COPY --from=builder /usr/local/bin/pandoc-crossref /usr/local/bin/pandoc-crossref
 COPY --from=builder /usr/src/pandoc/data /usr/share/pandoc/data
 COPY --chmod=755 entrypoint.sh /bin/entrypoint
 ENTRYPOINT ["entrypoint"]
