@@ -53,9 +53,8 @@ RUN rm -rf /var/lib/cache/* /var/lib/log/* /usr/share/groff/* /usr/share/info/* 
     /var/cache/man/* /usr/share/man/* /usr/share/doc/*
 
 # Install python extension
-RUN pip3 install --break-system-packages --no-cache-dir pandoc-latex-environment
-RUN pip3 install --break-system-packages --no-cache-dir git+https://github.com/ngocptblaplafla/pandoc-xnos.git
-## fix xnos pandoc version error
+COPY requirements.txt /root/requirements.txt
+RUN pip3 install --break-system-packages --no-cache-dir -r /root/requirements.txt
 
 # Install nodejs extension
 RUN npm install -g @mermaid-js/mermaid-cli

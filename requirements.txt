@@ -1,0 +1,7 @@
+pandoc-latex-environment
+pandoc-xnos @ git+https://github.com/ngocptblaplafla/pandoc-xnos.git # fix xnos pandoc version error
+pandoc-fignos
+pandoc-eqnos
+pandoc-tablenos
+pandoc-secnos
+pandoc-theoremnos @ git+https://github.com/ngocptblaplafla/pandoc-theoremnos.git
