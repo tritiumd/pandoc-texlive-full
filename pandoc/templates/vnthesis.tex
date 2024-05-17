@@ -49,9 +49,9 @@ $for(fontfamilies)$
     $fontfamilies.options$,
     $endfor$
 ]{$fontfamilies.font$}
-    $endfor$
-    $if(mathfont)$
-    $if(mathspec)$
+$endfor$
+$if(mathfont)$
+$if(mathspec)$
 \ifXeTeX
 \setmathfont(Digits,Latin,Greek){$mathfont$}[
     $for(mathfontoptions)$
@@ -90,9 +90,9 @@ $if(CJKsansfont)$
 $endif$
 $if(CJKmonofont)$
 \setCJKmonofont{$CJKmonofont$}[
-$for(CJKoptions)$
-$CJKoptions$,
-$endfor$
+    $for(CJKoptions)$
+    $CJKoptions$,
+    $endfor$
 ]
 $endif$
 \fi
@@ -262,11 +262,11 @@ $if(toc)$
 $endif$
 \renewcommand{\baselinestretch}{$if(line-spacing)$$line-spacing$$else$1$endif$}
 \usepackage{indentfirst}
-\setlength{\parindent}{$if(indent)$$indent$$else$14pt$endif$}
+\setlength{\parindent}{14pt}
 \setlength{\parskip}{$parskip$$if(parskip)$$else$6pt$endif$}
 
 $if(number-sections)$
-\setcounter{secnumdepth}{4}
+\setcounter{secnumdepth}{6}
 \renewcommand{\thechapter}{$if(number-sections.chapter)$$number-sections.chapter$$else$\arabic{chapter}$endif$}
 \renewcommand{\thesection}{$if(number-sections.section)$$number-sections.section$$else$\thechapter.\arabic{section}$endif$}
 \renewcommand{\thesubsection}{$if(number-sections.subsection)$$number-sections.subsection$$else$\thesection.\arabic{subsection}$endif$}
@@ -321,14 +321,15 @@ $endif$
 $for(header-includes)$
 $header-includes$
 $endfor$
-
 \usepackage{environ}
 \NewEnviron{centerboxed}[1][0.95]{
-\makebox[\linewidth][c]{%
-\begin{minipage}[t][#1\textheight][t]{\linewidth}%
+\makebox[\linewidth][c]{
+\centerline{
+\begin{minipage}[t][#1\textheight][t]{0.95\linewidth}%
 \BODY
-\end{minipage}%
-}%
+\end{minipage}
+}
+}
 }
 
 \NewEnviron{sign}{
@@ -347,10 +348,13 @@ $if(toc.lof)$\listoffigures$endif$
 $if(toc.lot)$\listoftables$endif$
 }
 $endif$
-
 \usepackage{tikz}
 \newcommand{\centerboxedHeight}{0.95}
 $if(tikzlib)$\usetikzlibrary{$tikzlib$}$endif$
+\newcommand{\tmar}{$if(top-margin)$$top-margin$$else$2.5cm$endif$}
+\newcommand{\bmar}{$if(bottom-margin)$$bottom-margin$$else$2.5cm$endif$}
+\newcommand{\lmar}{$if(left-margin)$$left-margin$$else$3cm$endif$}
+\newcommand{\rmar}{$if(right-margin)$$right-margin$$else$2.5cm$endif$}
 $if(frame_type)$
 \newcommand{\frontmatterthesisframe}[2]{
 \ifnum#1=0
@@ -361,10 +365,10 @@ $if(frame_type)$
 \begin{tikzpicture}[remember picture,overlay]
 \centering
 \draw[blue!70!black,line width=4pt]
-([xshift=-1.5cm,yshift=-2cm]current page.north east) coordinate (A)--
-([xshift=3.5cm,yshift=-2cm]current page.north west) coordinate(B)--
-([xshift=3.5cm,yshift=2cm]current page.south west) coordinate (C)--
-([xshift=-1.5cm,yshift=2cm]current page.south east) coordinate(D)--cycle;
+([xshift=-\rmar+1cm,yshift=-\tmar+0.5cm]current page.north east) coordinate (A)--
+([xshift=\lmar+0.5cm,yshift=-\tmar+0.5cm]current page.north west) coordinate(B)--
+([xshift=\lmar+0.5cm,yshift=\bmar-0.5cm]current page.south west) coordinate (C)--
+([xshift=-\rmar+1cm,yshift=\bmar-0.5cm]current page.south east) coordinate(D)--cycle;
 \draw
 ([xshift=-0.5cm,yshift=0.5cm]A)--
 ([xshift=0.5cm,yshift=0.5cm]B)--
@@ -401,13 +405,13 @@ $if(frame_type)$
 \begin{tikzpicture}[remember picture,overlay]
 \centering
 \draw [line width=2pt]
-([xshift=3.5cm,yshift=-2.5cm]current page.north west)
+([xshift=\lmar+0.5cm,yshift=-\tmar]current page.north west)
 rectangle
-([xshift=-2cm,yshift=2.5cm]current page.south east);
+([xshift=-\rmar+0.5cm,yshift=\bmar]current page.south east);
 \draw [line width=0.5pt]
-([xshift=3.6cm,yshift=-2.6cm]current page.north west)
+([xshift=\lmar+0.6cm,yshift=-\tmar-0.1cm]current page.north west)
 rectangle
-([xshift=-2.1cm,yshift=2.6cm]current page.south east);
+([xshift=-\rmar+0.4cm,yshift=\bmar+0.1cm]current page.south east);
 \end{tikzpicture}
 \fi
 
@@ -415,9 +419,9 @@ rectangle
 \begin{tikzpicture}[remember picture,overlay]
 \centering
 \draw[line width = 3pt]
-([xshift=3.5cm,yshift=-2.5cm]current page.north west)
+([xshift=\lmar+0.5cm,yshift=-\tmar]current page.north west)
 rectangle
-([xshift=-2cm,yshift=2.5cm]current page.south east);
+([xshift=-\rmar+0.5cm,yshift=\bmar]current page.south east);
 \end{tikzpicture}
 \\[3mm]\indent
 \fi
@@ -431,8 +435,10 @@ rectangle
 
 \ifnum#1=1
 \centering
-\fontsize{14}{16}\selectfont $university$ \\
-$if(collage)$\fontsize{14}{16}\selectfont $collage$ \\$endif$
+\fontsize{14}{16}\selectfont{
+$university$ \\
+$if(collage)$$collage$ \\$endif$
+}
 \fontsize{13}{16}\selectfont\textbf{$faculty$} \\
 $if(horizontal_line)$$horizontal_line$\\$endif$
 \vspace*{1.5cm}
@@ -440,13 +446,15 @@ $if(logo)$\includegraphics[height=3cm,keepaspectratio]{"$logo$"}\\$endif$
 \vspace*{1.5cm}
 \fontsize{18}{1}\selectfont \textbf{$title$} \\
 \vspace{2cm}
-$if(subtitle)${\fontsize{14}{1}\selectfont $subtitle$}  \\$endif$
-$if(subject)${\fontsize{14}{1}\selectfont $subject$}  \\$endif$
-$if(major)${\fontsize{14}{1}\selectfont Ngành: $major$}  \\$endif$
+\fontsize{14}{14}\selectfont{
+$if(subtitle)$ $subtitle$  \\$endif$
+$if(subject)$ $subject$  \\$endif$
+$if(major)$Ngành: $major$  \\$endif$
+}
 \vspace{2cm}
-$if(instructors)${\fontsize{14}{1}\selectfont\textbf{
+$if(instructors)${\fontsize{14}{14}\selectfont\textbf{
 \begin{tabular}{ll}
-Người hướng dẫn: $for(instructors)$ & $instructors$$sep$ \\ \\[0.25em] $endfor$
+Người hướng dẫn: $for(instructors)$ & $instructors$$sep$ \\  $endfor$
 \end{tabular}
 }}
 \\$endif$
@@ -454,80 +462,83 @@ Người hướng dẫn: $for(instructors)$ & $instructors$$sep$ \\ \\[0.25em] $
 \raggedright{\hspace{4.2cm}\fontsize{14}{1}\selectfont \textbf{Người thực hiện:}\\
 \vspace{0.5cm}\hspace{5.5cm}
 \begin{tabular}{ll}
-$for(author)$$author.name$ & $author.id$ \\ \\[0.25em] $endfor$
+$for(author)$$author.name$ & $author.id$ \\  $endfor$
 \end{tabular}
 }
 \vfill
 \centering
 \fontsize{14}{14}\selectfont{\textbf{$position$$if(year)$ - $year$$endif$}}
+\\\vspace{0.3cm}
 \fi
 
 \ifnum#1=2
 \centering
-{\fontsize{13}{1}\selectfont $university$ \\
+\fontsize{13}{13}\selectfont{
+$university$ \\
 $if(collage)$$collage$ \\$endif$
 \textbf{$faculty$}
-}\\
+}
+\\
 \vspace{3.5cm}
-{\fontsize{14}{1}\selectfont \textbf{
+{\fontsize{14}{14}\selectfont \textbf{
 \begin{tabular}{ll}
-$for(author)$$author.name$ \\ \\[0.25em] $endfor$
+$for(author)$$author.name$  $endfor$
 \end{tabular}
 }}
 \\
 \vspace{2cm}
 
-{\fontsize{18}{1}\selectfont \textbf{$title$} }
-\\\vspace{5cm}
-
-$if(subtitle)${\fontsize{14}{1}\selectfont $subtitle$}  \\$endif$
-$if(major)${\fontsize{14}{1}\selectfont Ngành: $major$}  \\$endif$
-
+{\fontsize{18}{1}\selectfont\textbf{$title$} }
+\vfill
+\fontsize{14}{14}\selectfont{
+$if(subtitle)$ $subtitle$  \\$endif$
+$if(major)$ Ngành: $major$  \\$endif$
+}
 \vfill
 \centering
 \fontsize{14}{14}\selectfont{\textbf{$position$$if(year)$ - $year$$endif$}}
+\\\vspace{0.3cm}
 \fi
 
 \ifnum#1=3
 \centering
-{\fontsize{13}{1}\selectfont $university$ \\
-$if(collage)$$collage$ \\$endif$
+\fontsize{13}{13}\selectfont{
+$university$ \\
+$if(collage)$ $collage$ \\$endif$
 \textbf{$faculty$}
-}\\
+}
+\\
 \vspace{3.5cm}
-{\fontsize{14}{1}\selectfont \textbf{
+{\fontsize{14}{14}\selectfont \textbf{
 \begin{tabular}{ll}
-$for(author)$$author.name$ \\ \\[0.25em] $endfor$
+$for(author)$$author.name$ \\  $endfor$
 \end{tabular}
 }}
 \\
 \vspace{2cm}
 
 {\fontsize{18}{1}\selectfont \textbf{$title$} }
-\\\vspace{5cm}
-
-$if(subtitle)${\fontsize{14}{1}\selectfont $subtitle$}  \\$endif$
-$if(major)${\fontsize{14}{1}\selectfont Ngành: $major$}  \\$endif$
-
-\vspace{2cm}
-{\fontsize{14}{1}\selectfont \textbf{
+\vfill
+\fontsize{14}{14}\selectfont{
+$if(subtitle)$ $subtitle$  \\$endif$
+$if(major)$Ngành: $major$ \\$endif$
+}
+\vfill
+{\fontsize{14}{14}\selectfont \textbf{
 \begin{tabular}{ll}
-Cán bộ hướng dẫn: $for(instructors)$ & $instructors$$sep$ \\ \\[0.25em] $endfor$
+Cán bộ hướng dẫn: $for(instructors)$ & $instructors$$sep$ \\  $endfor$
 \end{tabular}
 }}
 \vfill
 \centering
 \fontsize{14}{14}\selectfont{\textbf{$position$$if(year)$ - $year$$endif$}}
+\\\vspace{0.3cm}
 \fi
 \end{centerboxed}
 }
 $endif$
 % fix toc use san serif font in header
-\setkomafont{chapter}{\normalfont\bfseries\large}
-\RedeclareSectionCommands[
-tocentryformat=\usekomafont{chapter},
-tocpagenumberformat=\usekomafont{chapter}
-]{chapter}
+\addtokomafont{chapterentry}{\rmfamily}
 \begin{document}
 \frontmatter
 \pagestyle{empty}
@@ -547,6 +558,7 @@ $if(twoside)$\newpage$endif$
 $endif$
 \mainmatter
 \pagestyle{fancy}
+\setlength{\parindent}{$if(indent)$$indent$$else$14pt$endif$}
 $body$
 \backmatter
 \end{document}

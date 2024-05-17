@@ -21,4 +21,4 @@ verbosity: ERROR
 highlight-style: ${USERDATA}/syntax-highlighting/data/themes/github-light.theme
 citeproc: true
 bibliography: refs.bib
-csl: ${USERDATA}/csl/apa.csl
+csl: ${USERDATA}/csl/apa-numeric-superscript-brackets.csl
