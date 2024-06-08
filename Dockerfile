@@ -17,7 +17,7 @@ COPY cabal.project.local /usr/src/pandoc/cabal.project.local
 
 ## Build with pandoc-crossref
 RUN cabal v2-build --disable-tests --disable-bench \
-          --jobs . pandoc-cli
+          --jobs . pandoc-cli pandoc-crossref
 
 RUN find dist-newstyle -name 'pandoc*' -type f -perm -u+x \
          -exec strip '{}' ';' -exec cp '{}' /usr/local/bin/ ';'
@@ -62,6 +62,10 @@ RUN PATH="$(npm root -g)/.bin:${PATH}"
 
 # Create dir for pandoc filter and template
 COPY --chmod=755 ./pandoc /pandoc
+COPY --from=builder /usr/src/pandoc/data /usr/share/pandoc/data
+# copy default data
+RUN cp -rf /usr/share/pandoc/data/* /pandoc && rm /usr/share/pandoc/data
+
 # https://github.com/mermaid-js/mermaid-cli/blob/master/Dockerfile
 COPY puppeteer-config.json /pandoc/puppeteer-config.json
 
@@ -71,7 +75,6 @@ ARG USERDATA=/pandoc
 
 # Copy pandoc
 COPY --from=builder /usr/local/bin/pandoc /usr/local/bin/pandoc
-#COPY --from=builder /usr/local/bin/pandoc-crossref /usr/local/bin/pandoc-crossref
-COPY --from=builder /usr/src/pandoc/data /usr/share/pandoc/data
+COPY --from=builder /usr/local/bin/pandoc-crossref /usr/local/bin/pandoc-crossref
 COPY --chmod=755 entrypoint.sh /bin/entrypoint
 ENTRYPOINT ["entrypoint"]
