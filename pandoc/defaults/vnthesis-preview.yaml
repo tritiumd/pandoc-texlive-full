@@ -1,8 +1,6 @@
 from: markdown+emoji+yaml_metadata_block
-output-file: result.pdf
-pdf-engine: xelatex
+output-file: result.html
 metadata-file: config.yaml
-template: vnthesis.tex
 filters:
   - vnthesis-sup.lua
   - include-files.lua
@@ -16,6 +14,7 @@ filters:
     path: pandoc-xnos
   - verbatim-captioning.lua
 standalone: true
+table-of-contents: true
 verbosity: ERROR
 highlight-style: ${USERDATA}/syntax-highlighting/data/themes/github-light.theme
 citeproc: true

@@ -64,7 +64,7 @@ RUN PATH="$(npm root -g)/.bin:${PATH}"
 COPY --chmod=755 ./pandoc /pandoc
 COPY --from=builder /usr/src/pandoc/data /usr/share/pandoc/data
 # copy default data
-RUN cp -rf /usr/share/pandoc/data/* /pandoc && rm /usr/share/pandoc/data
+RUN cp -rf /usr/share/pandoc/data/* /pandoc && rm -rf /usr/share/pandoc/data
 
 # https://github.com/mermaid-js/mermaid-cli/blob/master/Dockerfile
 COPY puppeteer-config.json /pandoc/puppeteer-config.json

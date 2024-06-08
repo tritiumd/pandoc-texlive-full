@@ -1,22 +1,22 @@
 local pandoc=require('pandoc')
 function Meta(meta)
     if PANDOC_WRITER_OPTIONS.listings and not FORMAT:match 'latex' then return nil end
-  includes = [[
-\usepackage{newfloat}
-\DeclareFloatingEnvironment[
-    fileext=los,
-    name=Verbatim,
-    placement=tbhp,
-]{coding}
-]]
+    name = 'Verbatim'
+    if meta['verbatim-floatname'] then name = meta['verbatim-floatname'] end
+    includes = '\\usepackage{newfloat}\n'..
+                '\\DeclareFloatingEnvironment[\n'..
+                'fileext=los,\n'..
+                'name='..name..',\n'..
+                'placement=tbhp,\n'..
+                ']{coding}'
 
-  if meta['header-includes'] then
-    table.insert(meta['header-includes'], pandoc.RawBlock('tex', includes))
-  else
-    meta['header-includes'] = List:new{pandoc.RawBlock('tex', includes)}
-  end
+    if meta['header-includes'] then
+        table.insert(meta['header-includes'], pandoc.RawBlock('tex', includes))
+    else
+        meta['header-includes'] = List:new{pandoc.RawBlock('tex', includes)}
+    end
 
-  return meta
+    return meta
 end
 
 function CodeBlock(elem)
