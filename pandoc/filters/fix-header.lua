@@ -13,7 +13,7 @@ local function l(text)
 end
 
 function Header (h)
-  if h.level <= 2 and h.classes:includes 'unnumbered' then
+  if FORMAT:match 'latex' and h.level <= 2 and h.classes:includes 'unnumbered' then
     local title = clean(h.content)
     local secmark = h.level == 1
       and l'\\markboth{' .. title .. l'}{' .. title .. l'}'
