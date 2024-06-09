@@ -11,6 +11,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Tags
+        run: |
+          TAG=${{github.ref_name}}
+          if [ $TAG = "main" ]; then 
+            TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          fi
+          echo $TAG
+          echo "TAG=$TAG" >> $GITHUB_ENV
       - name: Checkout submodules
         run: git submodule update --init --recursive
       - name: Set up QEMU
@@ -41,7 +49,7 @@ jobs:
           push: true
           tags: |
             ${{ github.repository }}:latest
-            ${{ github.repository }}:${{ steps.date.outputs.time }}
+            ${{ github.repository }}:${{env.TAG}}
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v3
         with:
