@@ -2,7 +2,7 @@ name: ci
 
 on:
   release:
-    types: [created, edited]
+    types: [created]
   workflow_dispatch: # Put here!!
 
 jobs:
@@ -35,7 +35,7 @@ jobs:
         with:
           context: .
           load: true
-          tags: ${{ github.repository }}:latest
+          tags: ngocptblaplafla/pandoc-texlive-full:latest
       - name: Get current date
         id: date
         uses: Kaven-Universe/github-action-current-date-time@v1
@@ -48,11 +48,11 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ github.repository }}:latest
-            ${{ github.repository }}:${{env.TAG}}
+            ngocptblaplafla/pandoc-texlive-full:latest
+            ngocptblaplafla/pandoc-texlive-full:${{env.TAG}}
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: ${{ github.repository }}
+          repository: ngocptblaplafla/pandoc-texlive-full
