@@ -45,8 +45,9 @@ fc-list  | cut -d\  -f2-99 | cut -d: -f1 | sort -u
 
 # Credits
 - [Pandoc](https://github.com/jgm/pandoc)
-- [Pandoc Team](https://github.com/pandoc)
+- [Pandoc Team](https://github.com/pandoc) 
 - [Pandoc-Ext Team](https://github.com/pandoc-ext)
+- Special thank [Tarleb](https://tarleb.com) for help me a lot when I writing filter
 - chrisaga for some [filter](https://github.com/chrisaga/hk-pandoc-filters)
 - [pandoc-latex-template](https://github.com/Wandmalfarbe/pandoc-latex-template)
 - [pandoc-leaflet-template](https://gitlab.com/daamien/pandoc-leaflet-template)
