@@ -2,7 +2,7 @@ name: ci
 
 on:
   release:
-    types: [created]
+    types: [created,edited]
   workflow_dispatch: # Put here!!
 
 jobs:
