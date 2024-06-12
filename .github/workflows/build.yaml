@@ -21,6 +21,8 @@ jobs:
           echo "TAG=$TAG" >> $GITHUB_ENV
       - name: Checkout submodules
         run: git submodule update --init --recursive
+      - name: Install template and delete some unused data
+        run: sh clean.sh
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
