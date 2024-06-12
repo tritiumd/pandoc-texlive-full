@@ -7,3 +7,8 @@
 	path = pandoc/csl
 	url = https://github.com/citation-style-language/styles
 	shallow = true
+
+[submodule "pandoc/filters"]
+	path = pandoc/filters
+	url = https://github.com/tritiumd/pandoc-filters
+    shallow = true
