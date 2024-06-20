@@ -1,5 +1,6 @@
 git clone https://github.com/tritiumd/pandoc-thesis
-cp -rf pandoc-thesis/pandoc/* pandoc
+git clone https://github.com/tritiumd/pandoc-cv
+cp -rf pandoc-*/pandoc/* pandoc
 cd pandoc
 (
 cd csl
