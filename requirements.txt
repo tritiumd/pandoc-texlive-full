@@ -5,3 +5,4 @@ pandoc-eqnos
 pandoc-tablenos
 pandoc-secnos
 pandoc-theoremnos @ git+https://github.com/tritiumd/pandoc-theoremnos.git
+weasyprint

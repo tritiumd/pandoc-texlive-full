@@ -1,0 +1,5 @@
+# https://github.com/gliderlabs/docker-alpine/issues/386#issuecomment-380096034
+# for asymptote
+https://nl.alpinelinux.org/alpine/edge/testing/
+# for plantuml arm64
+https://nl.alpinelinux.org/alpine/v3.18/community/

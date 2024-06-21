@@ -54,4 +54,6 @@ fc-list  | cut -d\  -f2-99 | cut -d: -f1 | sort -u
 - [pandoc-letter](https://github.com/aaronwolen/pandoc-letter)
 - [KDE/syntax-highlighting](https://github.com/KDE/syntax-highlighting)
 - [citation-style-language/styles](https://github.com/citation-style-language/styles)
+- [Tectonic](https://github.com/tectonic-typesetting/tectonic)
+- [Wkhtmltopdf](https://wkhtmltopdf.org/) (thank [Surnet](https://github.com/Surnet/docker-wkhtmltopdf/) for prebuilt)
 - And many answers from Github and StackOverflow I forgot
