@@ -11,14 +11,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Tags
+      - name: Export LATEST_TAG
         run: |
-          TAG=${{github.ref_name}}
-          if [ $TAG = "main" ]; then 
-            TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-          fi
-          echo $TAG
-          echo "TAG=$TAG" >> $GITHUB_ENV
+          echo "TAG=$(curl -qsSL \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          "${{ github.api_url }}/repos/${{ github.repository }}/releases/latest" \
+          | jq -r .tag_name)" >> $GITHUB_ENV
+          echo ${{env.TAG}}
       - name: Checkout submodules
         run: git submodule update --init --recursive
       - name: Install template and delete some unused data
