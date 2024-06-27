@@ -1,0 +1,6 @@
+FROM ngocptblaplafla/pandoc-texlive-full:latest
+
+COPY --chmod=755 ./pandoc /tmp/pandoc
+RUN cp -rf /tmp/pandoc/* /pandoc && rm -rf /tmp/pandoc
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
