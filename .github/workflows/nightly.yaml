@@ -1,12 +1,12 @@
-name: ci
+name: nightly-release
 
 on:
   release:
-    types: [created,edited]
-  workflow_dispatch: # Put here!!
-
+    types: [published]
+  workflow_dispatch:
 jobs:
-  docker:
+  nightly-release:
+    if: "github.event.release.prerelease"
     runs-on: self-hosted
     steps:
       - name: Checkout
@@ -38,7 +38,7 @@ jobs:
         with:
           context: .
           load: true
-          tags: ngocptblaplafla/pandoc-texlive-full:latest
+          tags: ngocptblaplafla/pandoc-texlive-full:nightly
       - name: Get current date
         id: date
         uses: Kaven-Universe/github-action-current-date-time@v1
@@ -51,7 +51,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ngocptblaplafla/pandoc-texlive-full:latest
+            ngocptblaplafla/pandoc-texlive-full:nightly
+            ngocptblaplafla/pandoc-texlive-full:${{ steps.date.outputs.time }}
             ngocptblaplafla/pandoc-texlive-full:${{env.TAG}}
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v3
