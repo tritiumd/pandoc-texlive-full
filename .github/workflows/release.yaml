@@ -1,25 +1,15 @@
-name: ci
+name: release
 
 on:
   release:
-    types: [created,edited]
-  workflow_dispatch: # Put here!!
+    types: [published]
 
 jobs:
-  docker:
+  release:
     runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Export LATEST_TAG
-        run: |
-          echo "TAG=$(curl -qsSL \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          "${{ github.api_url }}/repos/${{ github.repository }}/releases/latest" \
-          | jq -r .tag_name)" >> $GITHUB_ENV
-          echo ${{env.TAG}}
       - name: Checkout submodules
         run: git submodule update --init --recursive
       - name: Install template and delete some unused data
@@ -38,13 +28,9 @@ jobs:
         with:
           context: .
           load: true
-          tags: ngocptblaplafla/pandoc-texlive-full:latest
-      - name: Get current date
-        id: date
-        uses: Kaven-Universe/github-action-current-date-time@v1
-        with:
-          format: "YYYY-MM-DD"
-      - name: Build and push
+          tags: pandoc-texlive-full:latest
+      - name: Build and push latest stable release
+        if: "!github.event.release.prerelease"
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -52,7 +38,18 @@ jobs:
           push: true
           tags: |
             ngocptblaplafla/pandoc-texlive-full:latest
-            ngocptblaplafla/pandoc-texlive-full:${{env.TAG}}
+            ngocptblaplafla/pandoc-texlive-full:${{github.ref_name}}
+      - name: Build and push latest nightly release
+        if: "github.event.release.prerelease"
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ngocptblaplafla/pandoc-texlive-full:nightly
+            ngocptblaplafla/pandoc-texlive-full:${{ steps.date.outputs.time }}
+            ngocptblaplafla/pandoc-texlive-full:${{github.ref_name}}
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v3
         with:
