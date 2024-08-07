@@ -1,22 +1,19 @@
 # Rewrite from build pandoc from source in alpine (https://github.com/pandoc/dockerfiles/blob/master/alpine/Dockerfile)
 FROM alpine:latest as builder-env
 
-RUN apk --no-cache add alpine-sdk bash ca-certificates cabal fakeroot \
-        ghc git gmp-dev libffi libffi-dev lua5.4-dev pkgconfig yaml zlib-dev \
-        gcc python3-dev py3-virtualenv musl-dev linux-headers
-
-FROM builder-env as pandoc-builder
-
+RUN apk --no-cache add alpine-sdk curl ca-certificates fakeroot git gmp-dev\
+         libffi libffi-dev lua5.4-dev pkgconfig yaml zlib-dev gcc python3-dev\
+         py3-virtualenv musl-dev linux-headers cabal
 COPY cabal.root.config /root/.cabal/config
 
+FROM builder-env as pandoc-builder
 # clone pandoc
 RUN git clone --branch=3.3  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
 WORKDIR /usr/src/pandoc
 RUN cabal v2-update -v3
 
 ## Add lua config
-COPY cabal.project.freeze /usr/src/pandoc/cabal.project.freeze
-COPY cabal.project.local /usr/src/pandoc/cabal.project.local
+COPY cabal.project.* /usr/src/pandoc
 
 ## Build with pandoc-crossref
 RUN cabal v2-build --disable-tests --disable-bench \
@@ -51,9 +48,7 @@ COPY 09-texlive-fonts.conf /etc/fonts/conf.d
 RUN fc-cache -r -v
 
 # Add wkhtmltopdf
-COPY --from=wkhtmltopdf /bin/wkhtmltopdf /bin/wkhtmltopdf
-COPY --from=wkhtmltopdf /bin/wkhtmltoimage /bin/wkhtmltoimage
-COPY --from=wkhtmltopdf /lib/libwkhtmltox* /bin/
+COPY --from=wkhtmltopdf /bin/wkhtmlto* /bin
 
 # Install python filter
 COPY --from=python-builder /venv /venv

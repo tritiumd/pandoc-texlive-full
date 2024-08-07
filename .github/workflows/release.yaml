@@ -29,6 +29,11 @@ jobs:
           context: .
           load: true
           tags: pandoc-texlive-full:latest
+      - name: Get current date
+        id: date
+        uses: Kaven-Universe/github-action-current-date-time@v1
+        with:
+          format: "YYYY-MM-DD"
       - name: Build and push latest stable release
         if: "!github.event.release.prerelease"
         uses: docker/build-push-action@v5
