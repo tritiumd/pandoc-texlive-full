@@ -10,7 +10,7 @@ FROM builder-env as pandoc-builder
 COPY cabal.root.config /root/.cabal/config
 
 # clone pandoc
-RUN git clone --branch=3.2  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
+RUN git clone --branch=3.3  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
 WORKDIR /usr/src/pandoc
 RUN cabal v2-update -v3
 
