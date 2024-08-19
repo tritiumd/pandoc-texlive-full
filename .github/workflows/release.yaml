@@ -10,10 +10,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Checkout submodules
-        run: git submodule update --init --recursive
-      - name: Install template and delete some unused data
-        run: sh clean.sh
+      - name: Install components
+        run: sh install-components.sh
+      - name: Create artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pandoc-assets
+          path: pandoc-assets.zip
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -61,3 +64,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ngocptblaplafla/pandoc-texlive-full
+      - name: Upload Release Asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run:  gh release upload ${{github.ref_name}} pandoc-assets.zip

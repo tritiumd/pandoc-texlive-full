@@ -1,4 +1,6 @@
 # https://github.com/gliderlabs/docker-alpine/issues/386#issuecomment-380096034
+https://nl.alpinelinux.org/alpine/latest-stable/community/
+https://nl.alpinelinux.org/alpine/latest-stable/main/
 # for asymptote
 https://nl.alpinelinux.org/alpine/edge/testing/
 # for plantuml arm64

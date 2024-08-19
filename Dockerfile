@@ -16,62 +16,45 @@ RUN cabal v2-update -v3
 COPY cabal.project.* /usr/src/pandoc
 
 ## Build with pandoc-crossref
-RUN cabal v2-build --disable-tests --disable-bench \
-          --jobs . pandoc-cli pandoc-crossref
+RUN cabal v2-build --disable-tests --disable-bench --jobs . pandoc-cli pandoc-crossref
 
-RUN find dist-newstyle -name 'pandoc*' -type f -perm -u+x \
-         -exec strip '{}' ';' -exec cp '{}' /usr/local/bin/ ';'
+RUN find dist-newstyle -name 'pandoc*' -type f -perm -u+x -exec strip '{}' ';' -exec cp '{}' /usr/local/bin/ ';'
 
 FROM builder-env as python-builder
 # Install python filter
 RUN python -m venv /venv
 ENV PATH=/venv/bin:$PATH
-COPY requirements.txt /root/requirements.txt
-RUN pip3 install -r /root/requirements.txt
+RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt \
+    pip3 install -r /tmp/requirements.txt
 
 FROM surnet/alpine-wkhtmltopdf:3.20.0-0.12.6-full as wkhtmltopdf
 
 FROM alpine:latest
 
 # Prepare for load repo
-COPY repositories /repositories
-# Load repo -> install & download font
-RUN cat /repositories >> /etc/apk/repositories && \
-    apk --no-cache add lua5.4-lpeg librsvg perl python3 npm texlive-full asymptote wget zip git typst groff \
+COPY repositories /etc/apk/repositories
+# prepare texlive font
+COPY 09-texlive-fonts.conf /etc/fonts/conf.d/99-texlive-fonts.conf
+# Create dir for pandoc filter and template
+COPY --chmod=755 ./pandoc /usr/local/share/pandoc
+# Load repo -> install app & font
+RUN apk --no-cache add lua5.4-lpeg librsvg perl python3 npm texlive-full asymptote wget zip git typst groff \
     plantuml graphviz chromium font-noto-cjk-extra tar font-jetbrains-mono msttcorefonts-installer tectonic \
-    && update-ms-fonts \
-    && rm -rf /repositories /usr/share/man/* /usr/share/doc/* /usr/share/info/*  \
+    && update-ms-fonts && fc-cache -r -v \
+    && npm install -g @mermaid-js/mermaid-cli pagedjs-cli --omit=dev --loglevel verbose \
+    && rm -rf /repositories /usr/share/man/* /usr/share/doc/* /usr/share/info/* /root/.cache /root/.npm \
     /usr/share/texmf-dist/source /usr/share/texmf-dist/fonts/source
-
-# load texlive font
-COPY 09-texlive-fonts.conf /etc/fonts/conf.d
-RUN fc-cache -r -v
-
 # Add wkhtmltopdf
-COPY --from=wkhtmltopdf /bin/wkhtmlto* /bin
-
+COPY --from=wkhtmltopdf /bin/wkhtmlto* /usr/local/bin
 # Install python filter
 COPY --from=python-builder /venv /venv
-
-# Install nodejs extension
-RUN npm install -g @mermaid-js/mermaid-cli pagedjs-cli --omit=dev && rm -rf /root/.cache /root/.npm
-
+# Copy pandoc
+COPY --from=pandoc-builder /usr/local/bin/pandoc* /usr/local/bin
 # Add execute to path
 ENV PATH="$(npm root -g)/.bin:/venv/bin:${PATH}"
-
-# Create dir for pandoc filter and template
-COPY --chmod=755 ./pandoc /pandoc
-COPY --from=pandoc-builder /usr/src/pandoc/data /usr/share/pandoc/data
-# copy default data
-RUN cp -rf /usr/share/pandoc/data/* /pandoc && rm -rf /usr/share/pandoc/data
-
-RUN mkdir /workspace
 WORKDIR /workspace
-ARG USERDATA=/pandoc
-
-# Copy pandoc
-COPY --from=pandoc-builder /usr/local/bin/pandoc /usr/local/bin/pandoc
-COPY --from=pandoc-builder /usr/local/bin/pandoc-crossref /usr/local/bin/pandoc-crossref
-COPY --chmod=755 entrypoint.sh /bin/entrypoint
-
-ENTRYPOINT ["entrypoint"]
+# Add env for filter
+ENV MERMAID_CONF=/usr/share/pandoc/puppeteer-config.json
+ENV XDG_DATA_HOME=/usr/local/share
+ENV XDG_CACHE_HOME=/tmp
+ENTRYPOINT ["/usr/local/bin/pandoc"]

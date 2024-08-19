@@ -7,7 +7,8 @@ Available for amd64 and arm64
 # Script
 > Build command if you want to custom
 > ```shell
-> docker buildx build --platform=linux/amd64,linux/arm64 .
+> sh install-components.sh
+> docker buildx build --platform=linux/amd64,linux/arm64 . --progress=plain --load
 >```
 
 > Run this command as pandoc
