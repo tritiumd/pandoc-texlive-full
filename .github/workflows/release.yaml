@@ -66,5 +66,5 @@ jobs:
           repository: ngocptblaplafla/pandoc-texlive-full
       - name: Upload Release Asset
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run:  gh release upload ${{github.ref_name}} pandoc-assets.zip

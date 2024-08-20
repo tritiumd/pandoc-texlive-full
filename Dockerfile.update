@@ -1,5 +1,5 @@
 FROM ngocptblaplafla/pandoc-texlive-full:nightly
 
-COPY --chmod=755 ./usr/share/pandoc /usr/share/pandoc
+COPY --chmod=755 ./pandoc /usr/local/share/pandoc
 RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt \
     pip3 install -r /tmp/requirements.txt && rm -rf /root/.cache
