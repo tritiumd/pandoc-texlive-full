@@ -8,7 +8,7 @@ Available for amd64 and arm64
 > Build command if you want to custom
 > ```shell
 > sh install-components.sh
-> docker buildx build --platform=linux/amd64,linux/arm64 . --progress=plain --load
+> docker buildx build --platform=linux/amd64,linux/arm64 . --progress=plain --load --tag pandoc-texlive-full:test
 >```
 
 > Run this command as pandoc

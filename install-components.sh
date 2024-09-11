@@ -4,7 +4,7 @@ git submodule update --recursive --remote
 # install data from source
 git clone --depth 1 --branch=3.3 https://github.com/jgm/pandoc srcpandoc
 cp -rf srcpandoc/data/* pandoc
-
+rm -rf srcpandoc
 # install template from other source
 function downloadTemplate() {
   REPO=$1
