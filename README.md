@@ -1,6 +1,6 @@
 pandoc-texlive-full
 ===
-Image based on alpine with pandoc with some extension and texlive preinstalled. Just pull and run
+Image based on alpine having pandoc with some extension and texlive preinstalled. Just pull and run
 
 Available for amd64 and arm64
 
@@ -14,6 +14,11 @@ Available for amd64 and arm64
 > Run this command as pandoc
 > ```shell
 > docker run --rm -v your_path:/workspace ngocptblaplafla/pandoc-texlive-full:latest
+>```
+
+> Run this command as quarto
+> ```shell
+> docker run --rm -v your_path:/workspace --entrypoint quarto ngocptblaplafla/pandoc-texlive-full:latest
 >```
 
 You can use alias for easier to call
@@ -46,6 +51,7 @@ fc-list  | cut -d\  -f2-99 | cut -d: -f1 | sort -u
 
 # Credits
 - [Pandoc](https://github.com/jgm/pandoc)
+- [Quarto](https://github.com/quarto-dev/)
 - [Pandoc Team](https://github.com/pandoc) 
 - [Pandoc-Ext Team](https://github.com/pandoc-ext)
 - Special thank [Tarleb](https://tarleb.com) for help me a lot when I writing filter
