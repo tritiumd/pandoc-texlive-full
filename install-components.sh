@@ -1,5 +1,5 @@
 # get data from submodule
-git submodule update --recursive --remote
+git submodule update --init --recursive --remote
 
 # install data from source
 git clone --depth 1 --branch=3.3 https://github.com/jgm/pandoc srcpandoc
@@ -39,8 +39,8 @@ rm -rf .github spec *.md *.json
 )
 (
 cd pandoc/syntax-highlighting
-mv data/syntax ../
-mv data/themes ../
+mv data/syntax ../syntax-definitions
+mv data/themes ../highlight-styles
 cd ../
 rm -rf syntax-highlighting
 )
