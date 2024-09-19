@@ -1,15 +1,15 @@
 # Rewrite from build pandoc from source in alpine (https://github.com/pandoc/dockerfiles/blob/master/alpine/Dockerfile)
-FROM alpine:latest as builder-env
+FROM alpine:latest AS builder-env
 
 RUN apk --no-cache add alpine-sdk curl ca-certificates fakeroot git gmp-dev musl-dev linux-headers \
          libffi libffi-dev lua5.4-dev pkgconfig yaml zlib-dev gcc python3-dev py3-virtualenv cabal
 COPY cabal.root.config /root/.cabal/config
 
-FROM builder-env as pandoc-builder
+FROM builder-env AS pandoc-builder
 
 RUN cabal v2-update -v3
 # clone pandoc
-RUN git clone --branch=3.3  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
+RUN git clone --branch=3.4  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
 WORKDIR /usr/src/pandoc
 ## Add lua config
 COPY cabal.project.* /usr/src/pandoc
@@ -17,16 +17,16 @@ COPY cabal.project.* /usr/src/pandoc
 RUN cabal v2-build --disable-tests --disable-bench --jobs . pandoc-cli pandoc-crossref
 RUN find dist-newstyle -name 'pandoc*' -type f -perm -u+x -exec strip '{}' ';' -exec cp '{}' /usr/local/bin/ ';'
 
-FROM builder-env as python-builder
+FROM builder-env AS python-builder
 # Install python filter
 RUN python -m venv /venv
 ENV PATH=/venv/bin:$PATH
 RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt \
     pip3 install -r /tmp/requirements.txt
 
-FROM surnet/alpine-wkhtmltopdf:3.20.0-0.12.6-full as wkhtmltopdf
+FROM surnet/alpine-wkhtmltopdf:3.20.0-0.12.6-full AS wkhtmltopdf
 
-FROM denoland/deno:alpine-1.41.0 as quarto-installer
+FROM denoland/deno:alpine-1.41.0 AS quarto-installer
 RUN apk add tar
 ARG QUARTO_VER="1.5.57"
 ARG TARGETARCH
