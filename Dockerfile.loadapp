@@ -10,13 +10,13 @@ RUN tar -xvzf quarto.tar.gz \
 
 FROM ngocptblaplafla/pandoc-texlive-full:temp-do-not-use
 # Install app & font -> install js filter -> delete unused
-RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt \
+RUN --mount=type=bind,source=requirements.txt,target=/requirements.txt \
     apk --no-cache add lua5.4-lpeg librsvg perl python3 npm texlive-full asymptote wget zip git typst groff \
     plantuml graphviz chromium-swiftshader font-noto-cjk-extra tar font-jetbrains-mono msttcorefonts-installer tectonic \
-    && update-ms-fonts && fc-cache -r -v && pip3 install -r /tmp/requirements.txt \
+    && update-ms-fonts && fc-cache -r -v && pip3 install -r /requirements.txt \
     && npm install -g @mermaid-js/mermaid-cli pagedjs-cli --omit=dev --loglevel verbose \
     && rm -rf /repositories /usr/share/man/* /usr/share/doc/* /usr/share/info/* /root/.cache /root/.npm \
-    /usr/share/texmf-dist/source /usr/share/texmf-dist/fonts/source \
+    /usr/share/texmf-dist/source /usr/share/texmf-dist/fonts/source /tmp/* \
     && echo 'LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/lib64" /quarto/bin/quarto $@' > /usr/local/bin/quarto && chmod +x /usr/local/bin/quarto
 # Add wkhtmltopdf
 COPY --from=wkhtmltopdf /bin/wkhtmlto* /usr/local/bin
@@ -28,7 +28,11 @@ COPY --chmod=755 ./pandoc /usr/local/share/pandoc
 ENV PATH="$(npm root -g)/.bin:${PATH}"
 WORKDIR /workspace
 # Add env for filter
-ENV MERMAID_CONF=/usr/share/pandoc/puppeteer-config.json
+ENV MERMAID_CONF=/usr/local/share/pandoc/puppeteer-config.json
+# Add default user
+USER tritiumd
+ENV XDG_CONFIG_HOME=/tmp/tritiumd
+ENV HOME=/tmp/tritiumd
 ENTRYPOINT ["/usr/local/bin/pandoc"]
 
 

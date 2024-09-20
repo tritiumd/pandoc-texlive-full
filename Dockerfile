@@ -63,7 +63,11 @@ COPY --from=pandoc-builder /usr/local/bin/pandoc* /usr/local/bin
 ENV PATH="$(npm root -g)/.bin:/venv/bin:${PATH}"
 WORKDIR /workspace
 # Add env for filter
-ENV MERMAID_CONF=/usr/share/pandoc/puppeteer-config.json
+ENV MERMAID_CONF=/usr/local/share/pandoc/puppeteer-config.json
 ENV XDG_DATA_HOME=/usr/local/share
+ENV XDG_CONFIG_HOME=/tmp/tritiumd
 ENV XDG_CACHE_HOME=/tmp
+# Add default user
+USER tritiumd
+ENV HOME=/tmp/tritiumd
 ENTRYPOINT ["/usr/local/bin/pandoc"]
