@@ -36,10 +36,10 @@ RUN pip3 install --break-system-packages --no-cache-dir pandoc-latex-environment
 ```
 
 ## Lua filter
-Mount your lua filter folder with /pandoc/filters
+Mount your lua filter folder with /usr/local/share/pandoc/filters
 
 ## Template
-Mount your template folder with /pandoc/template
+Mount your template folder with /usr/local/share/pandoc/template
 
 ## Font
 Mount your font folder with /usr/share/fonts/

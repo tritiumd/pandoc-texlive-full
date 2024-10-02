@@ -39,6 +39,5 @@ COPY --from=gnu-lib --chown=root:root --chmod=755 /lib/*-linux-gnu/* /lib64/
 COPY --from=pandoc-builder /usr/local/bin/pandoc* /usr/local/bin
 # Load env
 ENV XDG_DATA_HOME=/usr/local/share
-ENV XDG_CACHE_HOME=/tmp
 ENV PATH="/venv/bin:${PATH}"
 ENTRYPOINT ["/usr/local/bin/pandoc"]

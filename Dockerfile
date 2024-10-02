@@ -7,9 +7,9 @@ COPY cabal.root.config /root/.cabal/config
 
 FROM builder-env AS pandoc-builder
 
-RUN cabal v2-update -v3
 # clone pandoc
 RUN git clone --branch=3.4  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
+RUN cabal v2-update -v3
 WORKDIR /usr/src/pandoc
 ## Add lua config
 COPY cabal.project.* /usr/src/pandoc
@@ -65,9 +65,10 @@ WORKDIR /workspace
 # Add env for filter
 ENV MERMAID_CONF=/usr/local/share/pandoc/puppeteer-config.json
 ENV XDG_DATA_HOME=/usr/local/share
-ENV XDG_CONFIG_HOME=/tmp/tritiumd
-ENV XDG_CACHE_HOME=/tmp
-# Add default user
-USER tritiumd
 ENV HOME=/tmp/tritiumd
+ENV XDG_CONFIG_HOME=$HOME/.config
+ENV XDG_CACHE_HOME=$HOME/.cache
+# Add default user
+RUN adduser --disabled-password tritiumd && chmod 777 /workspace
+USER tritiumd
 ENTRYPOINT ["/usr/local/bin/pandoc"]

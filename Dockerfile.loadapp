@@ -29,10 +29,12 @@ ENV PATH="$(npm root -g)/.bin:${PATH}"
 WORKDIR /workspace
 # Add env for filter
 ENV MERMAID_CONF=/usr/local/share/pandoc/puppeteer-config.json
-# Add default user
-USER tritiumd
-ENV XDG_CONFIG_HOME=/tmp/tritiumd
 ENV HOME=/tmp/tritiumd
+ENV XDG_CONFIG_HOME=$HOME/.config
+ENV XDG_CACHE_HOME=$HOME/.cache
+# Add default user
+RUN adduser --disabled-password tritiumd && chmod 777 /workspace
+USER tritiumd
 ENTRYPOINT ["/usr/local/bin/pandoc"]
 
 
