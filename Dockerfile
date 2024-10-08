@@ -26,13 +26,15 @@ RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt \
 
 FROM surnet/alpine-wkhtmltopdf:3.20.0-0.12.6-full AS wkhtmltopdf
 
-FROM denoland/deno:alpine-1.41.0 AS quarto-installer
+FROM alpine:latest AS quarto-installer
 RUN apk add tar
 ARG QUARTO_VER="1.5.57"
 ARG TARGETARCH
 ADD https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VER}/quarto-${QUARTO_VER}-linux-${TARGETARCH}.tar.gz /quarto.tar.gz
 RUN tar -xvzf quarto.tar.gz \
     && mv quarto-${QUARTO_VER} /quarto
+
+FROM gcr.io/distroless/cc AS gnu-lib
 
 FROM alpine:latest
 
@@ -41,13 +43,12 @@ COPY repositories /etc/apk/repositories
 # prepare texlive font
 COPY 09-texlive-fonts.conf /etc/fonts/conf.d/99-texlive-fonts.conf
 # Install app & font -> install js filter -> delete unused
-RUN apk --no-cache add lua5.4-lpeg librsvg perl python3 npm texlive-full asymptote wget zip git typst groff \
+RUN apk --no-cache add lua5.4-lpeg librsvg perl python3 npm texlive-full asymptote wget zip git typst groff R \
     plantuml graphviz chromium-swiftshader font-noto-cjk-extra tar font-jetbrains-mono msttcorefonts-installer tectonic \
     && update-ms-fonts && fc-cache -r -v \
     && npm install -g @mermaid-js/mermaid-cli pagedjs-cli --omit=dev --loglevel verbose \
     && rm -rf /repositories /usr/share/man/* /usr/share/doc/* /usr/share/info/* /root/.cache /root/.npm \
-    /usr/share/texmf-dist/source /usr/share/texmf-dist/fonts/source \
-    && echo 'LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/lib64" /quarto/bin/quarto $@' > /usr/local/bin/quarto && chmod +x /usr/local/bin/quarto
+    /usr/share/texmf-dist/source /usr/share/texmf-dist/fonts/source
 # Add wkhtmltopdf
 COPY --from=wkhtmltopdf /bin/wkhtmlto* /usr/local/bin
 # Install python filter
@@ -55,12 +56,13 @@ COPY --from=python-builder /venv /venv
 # Copy quarto
 COPY --from=quarto-installer /quarto /quarto
 ## use instructor from https://github.com/denoland/deno_docker/blob/main/alpine.dockerfile
-COPY --from=quarto-installer /usr/local/lib/* /lib64/
+COPY --from=gnu-lib --chown=root:root --chmod=755 /lib/*-linux-gnu/* /lib64/
 # Copy pandoc, filter and template
 COPY --chmod=755 ./pandoc /usr/local/share/pandoc
 COPY --from=pandoc-builder /usr/local/bin/pandoc* /usr/local/bin
 # Add execute to path
-ENV PATH="$(npm root -g)/.bin:/venv/bin:${PATH}"
+ENV PATH="/quarto/bin:$(npm root -g)/.bin:/venv/bin:${PATH}"
+ENV LD_LIBRARY_PATH=/lib:/usr/lib:/lib64
 WORKDIR /workspace
 # Add env for filter
 ENV MERMAID_CONF=/usr/local/share/pandoc/puppeteer-config.json
@@ -68,6 +70,9 @@ ENV XDG_DATA_HOME=/usr/local/share
 ENV HOME=/tmp/tritiumd
 ENV XDG_CONFIG_HOME=$HOME/.config
 ENV XDG_CACHE_HOME=$HOME/.cache
+# Add env to enviroment
+## https://stackoverflow.com/questions/34630571/docker-env-variables-not-set-while-log-via-shell
+RUN env | egrep -v "^(HOME=|USER=|MAIL=|LC_ALL=|LS_COLORS=|LANG=|HOSTNAME=|PWD=|TERM=|SHLVL=|LANGUAGE=|_=)" | sed 's/^/export /' >> /etc/profile
 # Add default user
 RUN adduser --disabled-password tritiumd && chmod 777 /workspace
 USER tritiumd

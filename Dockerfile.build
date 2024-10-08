@@ -40,4 +40,5 @@ COPY --from=pandoc-builder /usr/local/bin/pandoc* /usr/local/bin
 # Load env
 ENV XDG_DATA_HOME=/usr/local/share
 ENV PATH="/venv/bin:${PATH}"
+ENV LD_LIBRARY_PATH=/lib:/usr/lib:/lib64
 ENTRYPOINT ["/usr/local/bin/pandoc"]
