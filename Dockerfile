@@ -34,6 +34,10 @@ ADD https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VER}/qu
 RUN tar -xvzf quarto.tar.gz \
     && mv quarto-${QUARTO_VER} /quarto
 
+FROM builder-env AS R-builder
+RUN apk add R R-dev
+RUN Rscript -e "install.packages(c('knitr', 'rmarkdown'), repos='https://cran.rstudio.com')"
+
 FROM gcr.io/distroless/cc AS gnu-lib
 
 FROM alpine:latest
@@ -43,7 +47,7 @@ COPY repositories /etc/apk/repositories
 # prepare texlive font
 COPY 09-texlive-fonts.conf /etc/fonts/conf.d/99-texlive-fonts.conf
 # Install app & font -> install js filter -> delete unused
-RUN apk --no-cache add lua5.4-lpeg librsvg perl python3 npm texlive-full asymptote wget zip git typst groff R \
+RUN apk --no-cache add lua5.4-lpeg librsvg perl python3 npm texlive-full asymptote wget zip git typst groff R R-dev \
     plantuml graphviz chromium-swiftshader font-noto-cjk-extra tar font-jetbrains-mono msttcorefonts-installer tectonic \
     && update-ms-fonts && fc-cache -r -v \
     && npm install -g @mermaid-js/mermaid-cli pagedjs-cli --omit=dev --loglevel verbose \
@@ -60,6 +64,8 @@ COPY --from=gnu-lib --chown=root:root --chmod=755 /lib/*-linux-gnu/* /lib64/
 # Copy pandoc, filter and template
 COPY --chmod=755 ./pandoc /usr/local/share/pandoc
 COPY --from=pandoc-builder /usr/local/bin/pandoc* /usr/local/bin
+# Copy R lib
+COPY --from=R-builder /usr/lib/R/library /usr/lib/R/library
 # Add execute to path
 ENV PATH="/quarto/bin:$(npm root -g)/.bin:/venv/bin:${PATH}"
 ENV LD_LIBRARY_PATH=/lib:/usr/lib:/lib64

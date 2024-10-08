@@ -11,7 +11,7 @@ RUN tar -xvzf quarto.tar.gz \
 FROM ngocptblaplafla/pandoc-texlive-full:temp-do-not-use
 # Install app & font -> install js filter -> delete unused
 RUN --mount=type=bind,source=requirements.txt,target=/requirements.txt \
-    apk --no-cache add lua5.4-lpeg librsvg perl python3 npm texlive-full asymptote wget zip git typst groff R \
+    apk --no-cache add lua5.4-lpeg librsvg perl python3 npm texlive-full asymptote wget zip git typst groff R R-dev \
     plantuml graphviz chromium-swiftshader font-noto-cjk-extra tar font-jetbrains-mono msttcorefonts-installer tectonic \
     && update-ms-fonts && fc-cache -r -v && pip3 install -r /requirements.txt \
     && npm install -g @mermaid-js/mermaid-cli pagedjs-cli --omit=dev --loglevel verbose \

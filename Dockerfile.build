@@ -24,6 +24,10 @@ ENV PATH=/venv/bin:$PATH
 RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt \
     pip3 install -r /tmp/requirements.txt
 
+FROM builder-env AS R-builder
+RUN apk add R R-dev
+RUN Rscript -e "install.packages(c('knitr', 'rmarkdown'), repos='https://cran.rstudio.com')"
+
 FROM gcr.io/distroless/cc AS gnu-lib
 
 FROM alpine:latest
@@ -37,6 +41,8 @@ COPY --from=python-builder /venv /venv
 COPY --from=gnu-lib --chown=root:root --chmod=755 /lib/*-linux-gnu/* /lib64/
 # Install pandoc
 COPY --from=pandoc-builder /usr/local/bin/pandoc* /usr/local/bin
+# Copy R lib
+COPY --from=R-builder /usr/lib/R/library /usr/lib/R/library
 # Load env
 ENV XDG_DATA_HOME=/usr/local/share
 ENV PATH="/venv/bin:${PATH}"
