@@ -8,7 +8,7 @@ COPY cabal.root.config /root/.cabal/config
 FROM builder-env AS pandoc-builder
 
 # clone pandoc
-RUN git clone --branch=3.4  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
+RUN git clone --branch=3.5  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
 RUN cabal v2-update -v3
 WORKDIR /usr/src/pandoc
 ## Add lua config
@@ -83,3 +83,4 @@ RUN env | egrep -v "^(HOME=|USER=|MAIL=|LC_ALL=|LS_COLORS=|LANG=|HOSTNAME=|PWD=|
 RUN adduser --disabled-password tritiumd && chmod 777 /workspace
 USER tritiumd
 ENTRYPOINT ["/usr/local/bin/pandoc"]
+#apk add openssh && echo -e "PermitEmptyPasswords yes\nPermitRootLogin yes" > /etc/ssh/sshd_config && passwd -d root && ssh-keygen -A && /usr/sbin/sshd -De
