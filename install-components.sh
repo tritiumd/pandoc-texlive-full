@@ -21,7 +21,7 @@ function downloadTemplate() {
 (
   redownload=false
   cd pandoc/templates
-  downloadTemplate "https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template" eisvogel.tex eisvogel "2.4.2" $redownload
+  downloadTemplate "https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template" eisvogel.tex eisvogel "2.5.0" $redownload
   downloadTemplate "https://raw.githubusercontent.com/aaronwolen/pandoc-letter" template-letter.tex letter master
   downloadTemplate "https://gitlab.com/daamien/pandoc-leaflet-template/-/raw" leaflet.latex leaflet master
 )
