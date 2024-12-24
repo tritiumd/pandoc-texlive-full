@@ -9,7 +9,7 @@ FROM builder-env AS pandoc-builder
 
 RUN cabal v2-update -v3
 # clone pandoc
-RUN git clone --branch=3.5  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
+RUN git clone --branch=3.6  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
 WORKDIR /usr/src/pandoc
 ## Add lua config
 COPY cabal.project.* /usr/src/pandoc

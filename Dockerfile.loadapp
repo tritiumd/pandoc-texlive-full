@@ -23,6 +23,8 @@ COPY --from=wkhtmltopdf /bin/wkhtmlto* /usr/local/bin
 COPY --from=quarto-installer /quarto /quarto
 # Copy pandoc, filter and template
 COPY --chmod=755 ./pandoc /usr/local/share/pandoc
+# Copy init file
+COPY --chmod=755 pandoc-init /bin/pandoc-init
 # Add execute to path
 ENV PATH="/quarto/bin:$(npm root -g)/.bin:${PATH}"
 WORKDIR /workspace

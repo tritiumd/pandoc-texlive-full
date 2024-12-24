@@ -2,7 +2,7 @@
 git submodule update --init --recursive --remote
 
 # install data from source
-git clone --depth 1 --branch=3.4 https://github.com/jgm/pandoc srcpandoc
+git clone --depth 1 --branch=3.6 https://github.com/jgm/pandoc srcpandoc
 cp -rf srcpandoc/data/* pandoc
 rm -rf srcpandoc
 # install template from other source
@@ -30,6 +30,12 @@ function downloadTemplate() {
 git clone https://github.com/tritiumd/pandoc-thesis --depth 1
 git clone https://github.com/tritiumd/pandoc-cv --depth 1
 cp -rf pandoc-*/pandoc/* pandoc
+
+# add init
+mkdir pandoc/init
+for i in pandoc-*; do
+  mv $i/init pandoc/init/$i
+done
 
 #clean
 rm -rf pandoc-thesis pandoc-cv srcpandoc

@@ -28,7 +28,7 @@ FROM surnet/alpine-wkhtmltopdf:3.20.0-0.12.6-full AS wkhtmltopdf
 
 FROM alpine:latest AS quarto-installer
 RUN apk add tar
-ARG QUARTO_VER="1.5.57"
+ARG QUARTO_VER="1.6.39"
 ARG TARGETARCH
 ADD https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VER}/quarto-${QUARTO_VER}-linux-${TARGETARCH}.tar.gz /quarto.tar.gz
 RUN tar -xvzf quarto.tar.gz \
@@ -64,6 +64,8 @@ COPY --from=gnu-lib --chown=root:root --chmod=755 /lib/*-linux-gnu/* /lib64/
 # Copy pandoc, filter and template
 COPY --chmod=755 ./pandoc /usr/local/share/pandoc
 COPY --from=pandoc-builder /usr/local/bin/pandoc* /usr/local/bin
+# Copy init file
+COPY --chmod=755 pandoc-init /bin/pandoc-init
 # Copy R lib
 COPY --from=R-builder /usr/lib/R/library /usr/lib/R/library
 # Add execute to path

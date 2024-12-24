@@ -1,0 +1,14 @@
+#!/bin/bash
+temp_name=$1
+dir_name=$2
+dir_name=${dir_name:-temp_name}
+names=("pandoc-cv" "pandoc-thesis")
+if [[ ! ${names[*]} =~ $temp_name ]]; then
+  echo "Template not supported" >&2
+  exit 1
+fi
+if [ -e $temp_name ]; then
+  echo "Project folder's name existed" >&2
+  exit 1
+fi
+cp -r /usr/local/share/pandoc/init/$name ./$dir_name
