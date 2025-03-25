@@ -6,9 +6,9 @@ RUN apk --no-cache add alpine-sdk curl ca-certificates fakeroot git gmp-dev musl
 COPY cabal.root.config /root/.cabal/config
 
 FROM builder-env AS pandoc-builder
-
+ARG PANDOC_VERSION="3.6.4"
 # clone pandoc
-RUN git clone --branch=3.5  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
+RUN git clone --branch=${PANDOC_VERSION}  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
 RUN cabal v2-update -v3
 WORKDIR /usr/src/pandoc
 ## Add lua config
@@ -28,7 +28,7 @@ FROM surnet/alpine-wkhtmltopdf:3.20.0-0.12.6-full AS wkhtmltopdf
 
 FROM alpine:latest AS quarto-installer
 RUN apk add tar
-ARG QUARTO_VER="1.6.39"
+ARG QUARTO_VER="1.6.42"
 ARG TARGETARCH
 ADD https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VER}/quarto-${QUARTO_VER}-linux-${TARGETARCH}.tar.gz /quarto.tar.gz
 RUN tar -xvzf quarto.tar.gz \

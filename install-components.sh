@@ -2,7 +2,7 @@
 git submodule update --init --recursive --remote
 
 # install data from source
-git clone --depth 1 --branch=3.6 https://github.com/jgm/pandoc srcpandoc
+git clone --depth 1 --branch=3.6.4 https://github.com/jgm/pandoc srcpandoc
 cp -rf srcpandoc/data/* pandoc
 rm -rf srcpandoc
 # install template from other source
@@ -21,7 +21,10 @@ function downloadTemplate() {
 (
   redownload=false
   cd pandoc/templates
-  downloadTemplate "https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template" eisvogel.tex eisvogel "2.5.0" $redownload
+  wget https://github.com/Wandmalfarbe/pandoc-latex-template/releases/download/v3.1.0/Eisvogel.zip
+  unzip Eisvogel.zip
+  mv Eisvogel*/eisvogel.* .
+  rm Eisvogel*
   downloadTemplate "https://raw.githubusercontent.com/aaronwolen/pandoc-letter" template-letter.tex letter master
   downloadTemplate "https://gitlab.com/daamien/pandoc-leaflet-template/-/raw" leaflet.latex leaflet master
 )
