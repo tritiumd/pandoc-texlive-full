@@ -34,6 +34,17 @@ jobs:
           - linux/amd64
           - linux/arm64
     steps:
+      - name: Remove unused components
+        uses: ngocptblaplafla/more-space-plz@v1
+        with:
+          android-sdk: true
+          dotnet: true
+          google-chrome: true
+          nodejs: true
+          microsoft-edge: true
+          mono: true
+          miniconda: true
+          snap: true
       - name: Prepare
         run: |
           platform=${{ matrix.platform }}
