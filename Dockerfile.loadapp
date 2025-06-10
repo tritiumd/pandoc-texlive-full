@@ -2,7 +2,7 @@ FROM surnet/alpine-wkhtmltopdf:3.20.0-0.12.6-full AS wkhtmltopdf
 
 FROM alpine:latest AS quarto-installer
 RUN apk add tar
-ARG QUARTO_VER="1.6.42"
+ARG QUARTO_VER="1.7.31"
 ARG TARGETARCH
 ADD https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VER}/quarto-${QUARTO_VER}-linux-${TARGETARCH}.tar.gz /quarto.tar.gz
 RUN tar -xvzf quarto.tar.gz \
@@ -14,7 +14,7 @@ RUN --mount=type=bind,source=requirements.txt,target=/requirements.txt \
     apk --no-cache add lua5.4-lpeg librsvg perl python3 npm texlive-full asymptote wget zip git typst groff R R-dev \
     plantuml graphviz chromium-swiftshader font-noto-cjk-extra tar font-jetbrains-mono msttcorefonts-installer tectonic \
     && update-ms-fonts && fc-cache -r -v && pip3 install -r /requirements.txt \
-    && npm install -g @mermaid-js/mermaid-cli pagedjs-cli --omit=dev --loglevel verbose \
+    && PUPPETEER_SKIP_DOWNLOAD=1 npm install -g @mermaid-js/mermaid-cli pagedjs-cli --omit=dev --loglevel verbose \
     && rm -rf /repositories /usr/share/man/* /usr/share/doc/* /usr/share/info/* /root/.cache /root/.npm \
     /usr/share/texmf-dist/source /usr/share/texmf-dist/fonts/source /tmp/*
 # Add wkhtmltopdf

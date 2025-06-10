@@ -23,7 +23,7 @@ jobs:
       - name: Upload Release Asset
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload --clobber ${{github.ref_name}} pandoc-assets.zip
+        run: gh release upload --clobber ${{github.event.release.tag_name}} pandoc-assets.zip
       - name: Update repo description on Dockerhub
         uses: peter-evans/dockerhub-description@v4
         with:

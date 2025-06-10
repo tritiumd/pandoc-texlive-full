@@ -21,7 +21,7 @@ function downloadTemplate() {
 (
   redownload=false
   cd pandoc/templates
-  wget https://github.com/Wandmalfarbe/pandoc-latex-template/releases/download/v3.1.0/Eisvogel.zip
+  wget https://github.com/Wandmalfarbe/pandoc-latex-template/releases/download/v3.2.0/Eisvogel.zip
   unzip Eisvogel.zip
   mv Eisvogel*/eisvogel.* .
   rm Eisvogel*

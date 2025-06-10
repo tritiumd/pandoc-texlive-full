@@ -6,7 +6,7 @@ RUN apk --no-cache add alpine-sdk curl ca-certificates fakeroot git gmp-dev musl
 COPY cabal.root.config /root/.cabal/config
 
 FROM builder-env AS pandoc-builder
-ARG PANDOC_VERSION="3.6.4"
+ARG PANDOC_VERSION="3.7.0.2"
 RUN cabal v2-update -v3
 # clone pandoc
 RUN git clone --branch=${PANDOC_VERSION}  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
