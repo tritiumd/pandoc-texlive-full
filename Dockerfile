@@ -1,12 +1,12 @@
 # Rewrite from build pandoc from source in alpine (https://github.com/pandoc/dockerfiles/blob/master/alpine/Dockerfile)
 FROM alpine:latest AS builder-env
 
-RUN apk --no-cache add alpine-sdk curl ca-certificates fakeroot git gmp-dev musl-dev linux-headers \
-         libffi libffi-dev lua5.4-dev pkgconfig yaml zlib-dev gcc python3-dev py3-virtualenv cabal
-COPY cabal.root.config /root/.cabal/config
+RUN apk --no-cache add alpine-sdk curl ca-certificates fakeroot git linux-headers \
+         lua5.4-dev yaml python3-dev py3-virtualenv cabal R R-dev
 
 FROM builder-env AS pandoc-builder
 ARG PANDOC_VERSION="3.7.0.2"
+COPY cabal.root.config /root/.cabal/config
 # clone pandoc
 RUN git clone --branch=${PANDOC_VERSION}  --depth=1 --quiet https://github.com/jgm/pandoc /usr/src/pandoc
 RUN cabal v2-update -v3
@@ -35,7 +35,7 @@ RUN tar -xvzf quarto.tar.gz \
     && mv quarto-${QUARTO_VER} /quarto
 
 FROM builder-env AS R-builder
-RUN apk add R R-dev
+COPY ./R_CMD_INSTALL_patch /usr/lib/R/bin/INSTALL
 RUN Rscript -e "install.packages(c('knitr', 'rmarkdown'), repos='https://cran.rstudio.com')"
 
 FROM gcr.io/distroless/cc AS gnu-lib
@@ -61,6 +61,7 @@ COPY --from=python-builder /venv /venv
 COPY --from=quarto-installer /quarto /quarto
 ## use instructor from https://github.com/denoland/deno_docker/blob/main/alpine.dockerfile
 COPY --from=gnu-lib --chown=root:root --chmod=755 /lib/*-linux-gnu/* /lib64/
+RUN ln -s /lib64/ld-linux-* /lib
 # Copy pandoc, filter and template
 COPY --chmod=755 ./pandoc /usr/local/share/pandoc
 COPY --from=pandoc-builder /usr/local/bin/pandoc* /usr/local/bin
@@ -68,6 +69,7 @@ COPY --from=pandoc-builder /usr/local/bin/pandoc* /usr/local/bin
 COPY --chmod=755 pandoc-init /bin/pandoc-init
 # Copy R lib
 COPY --from=R-builder /usr/lib/R/library /usr/lib/R/library
+COPY ./R_CMD_INSTALL_patch /usr/lib/R/bin/INSTALL
 # Add execute to path
 ENV PATH="/quarto/bin:$(npm root -g)/.bin:/venv/bin:${PATH}"
 ENV LD_LIBRARY_PATH=/lib:/usr/lib:/lib64
